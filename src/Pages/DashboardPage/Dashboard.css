@@ -1,0 +1,111 @@
+.dashboard-page{
+  width: 85%;
+}
+
+.dashboard-page-title{
+  margin-bottom: 22px;
+}
+
+
+.notification-container{
+  height: 91%;
+}
+
+.dashboard-page .alert{
+  margin-bottom: 5px;
+}
+
+.notifications-box{
+  height: 292px;
+  overflow-y: scroll
+}
+
+.dashboard-page .icon{
+  height: 25px;
+  width: 25px;
+  float: right
+}
+
+.dashboard-card-title{
+  height: 25px;
+  display: inline-block;
+  line-height: 25px;
+  margin-bottom: 0
+}
+
+.clickable-cell{
+  padding: 0 !important;
+  width: inherit;
+}
+
+.clickable-cell a{
+  margin-left: 12px;
+  height: 45px;
+  line-height: 45px;
+  width: 100%;
+  display: block;
+  color:#007bff;
+  font-size: 0.9rem;
+  white-space: nowrap;
+
+}
+
+.unsave-button{
+  font-size: 0.7rem;
+  padding: .250rem .50rem;
+}
+
+.notifications-table a{
+  color:#007bff;
+}
+
+.notifications-timestamp{
+  font-size: 0.75rem;
+  color: gray;
+}
+
+.notifications-cell-content{
+  width:85%;
+  padding-left: 20px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notifications-cell-button{
+  width: 15%;
+  padding: 0 !important;
+  vertical-align: middle !important;
+  text-align:center;
+}
+
+.bookmark-container{
+  max-height: 300px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.bookmark-container .bookmark{
+  display: flex;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.bookmark-container .bookmark .bookmark-info{
+  width: 75%;
+  display: inline-block;
+  padding: 10px
+}
+
+.bookmark-container .bookmark .bookmark-info .bookmark-info-content{
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis
+}
+
+.bookmark-container .bookmark .bookmark-button{
+  width: 25%;
+  display: inline-block;
+  line-height: 62px;
+  text-align: center;
+}

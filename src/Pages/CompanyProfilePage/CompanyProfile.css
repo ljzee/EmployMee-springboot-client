@@ -1,0 +1,104 @@
+.business-profile-page{
+  width: 80%;
+}
+
+.business-profile-page .card-header{
+  padding: .50rem 1.25rem
+}
+
+.business-profile-page-title{
+  margin-bottom: 22px;
+}
+
+.business-profile-page-title-address, .company-update-date{
+  color: #808080;
+}
+
+.business-profile-image{
+  border-radius: 2px;
+  height: 95px;
+  width: 95px;
+  display:block;
+  margin:10px auto 10px;
+  object-fit: cover;
+}
+
+.company-update{
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.company-update img{
+  height: 35px;
+  width: 35px;
+  margin-right: 10px;
+  border-radius: 2px;
+}
+
+.company-update-header{
+  margin-bottom: 10px;
+}
+
+.company-update button{
+  padding: 0;
+}
+
+.company-update-date{
+  margin-bottom: 15px;
+}
+
+.company-update-content{
+  width: 90%;
+}
+
+.business-profile-job-container{
+  overflow-x: scroll;
+  overflow-y:  hidden;
+  white-space: nowrap;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.business-profile-job-container-job + a{
+  margin-left: 20px;
+}
+
+.business-profile-job-container-job:last-child{
+  margin-right: 10px;
+}
+
+.business-profile-job-container-job:first-child{
+  margin-left: 10px;
+}
+
+.business-profile-job-container-job{
+  display:inline-block;
+  border: 1px solid lightgrey;
+  height: 100px;
+  width: 200px;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.business-profile-job-container-job:hover{
+  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);
+  transition: all 200ms ease-out;
+}
+
+.business-profile-job-container-job .job-title{
+  font-weight: 600;
+  padding-bottom: 5px;
+  border-bottom: 1px solid lightgrey;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.business-profile-job-container-job .job-location{
+  white-space: normal;
+  margin-top: 10px;
+  color: #808080;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

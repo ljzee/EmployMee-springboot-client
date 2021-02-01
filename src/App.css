@@ -1,0 +1,10 @@
+.body{
+  background-color: #e9ecef;
+  padding-top: 28px;
+  padding-bottom: 28px;
+  font-size: 0.90rem;
+}
+
+.btn, .navbar, .form-control{
+  font-size: 0.90rem;
+}

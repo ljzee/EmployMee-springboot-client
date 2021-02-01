@@ -1,0 +1,134 @@
+.applicantspage-title{
+  margin-bottom: 22px;
+}
+
+.applicantspage-toggle{
+  margin-bottom: 22px;
+}
+
+.applicantspage-toggle .btn{
+  border: 1px solid lightgrey;
+}
+
+@media(min-width: 768px){
+  .applicantspage-toggle .btn-group-toggle{
+    padding-left: 25px;
+    border-left: 1px solid lightgrey;
+  }
+}
+
+@media(max-width: 768px){
+  .applicantspage-toggle .btn-group-toggle{
+    margin-top: 10px;
+  }
+}
+
+.applicantspage-toggle input{
+  display: inline;
+  width: 250px;
+  padding: .375rem .75rem .550rem .75rem;
+  margin-right: 25px;
+}
+
+.candidates-container{
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  margin-bottom: 25px;
+}
+
+.candidates-title{
+  display: block;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid lightgrey;
+}
+
+.candidate-card{
+  margin: 10px;
+  height: 21rem;
+  width: 15.3rem;
+  padding: 10px;
+}
+
+.candidate-card-upper{
+  height: 7rem;
+  text-align: center;
+}
+
+.candidate-card-upper img{
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  vertical-align: middle;
+  object-fit: cover;
+}
+
+.candidate-card-upper-helper{
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.candidate-card-name{
+  text-align: center;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #EEEEEE;
+  font-weight: 600;
+}
+
+.candidate-card-contact{
+  text-align: center;
+  color: #9E9E9E;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #EEEEEE;
+  font-size: 0.8rem;
+}
+
+.candidate-card-contact div:first-child{
+  margin-bottom: 5px;
+}
+
+.candidate-card-contact img{
+  width:17px;
+  height: 17px;
+  margin-right: 10px;
+}
+
+.candidate-card-buttons{
+ height: 50px;
+ padding-bottom: 5px;
+ margin-bottom: 5px;
+ border-bottom: 1px solid #EEEEEE;
+}
+
+.candidate-card-buttons .btn{
+  font-size: 13px;
+  width: 50%;
+  height: 100%;
+  padding: .1rem .75rem;
+}
+
+.candidate-card-buttons .btn:first-child{
+  border-right: 1px solid #EEEEEE;
+}
+
+.candidate-card-options{
+  display:flex;
+  justify-content: space-between;
+}
+
+.candidate-card-options .btn{
+  width: 32%;
+  font-size: 13px;
+}
+
+.candidate-card-date{
+  text-align:center;
+  font-size: 0.8rem;
+  color: #9E9E9E;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #EEEEEE;
+}

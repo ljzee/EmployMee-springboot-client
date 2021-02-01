@@ -1,0 +1,61 @@
+.managepostings-page{
+  width: 90%;
+}
+
+.addposting-page{
+  width: 70%
+}
+
+.managepostings-page-title, .addposting-page-title{
+  margin-bottom: 25px;
+}
+
+.managepostings-page .card{
+  overflow: visible;
+}
+
+.datepicker-container,
+.datepicker-container > div.react-datepicker-wrapper,
+.datepicker-container > div > div.react-datepicker__input-container,
+.datepicker-container > div > div.react-datepicker__input-container input {
+   width: 100%;
+}
+
+.action-button-group{
+  text-align: center;
+
+}
+
+.action-button-group button{
+  height: 26px;
+  width: 26px;
+  padding: 0;
+  border-radius: 0.25rem;
+  padding-bottom: 0.3rem !important;
+}
+
+.action-button-group button + button{
+  margin-left: 2px !important;
+}
+
+.action-button-group button img{
+  max-width: 80%;
+  max-height: 80%;
+
+}
+
+.action-edit-button{
+  background-color: #ffb300;
+}
+
+.action-delete-button{
+  background-color: #ff3d00;
+}
+
+.action-applicant-button{
+  background-color: #039be5;
+}
+
+.ReactTable{
+  border-radius: 0.25rem
+}

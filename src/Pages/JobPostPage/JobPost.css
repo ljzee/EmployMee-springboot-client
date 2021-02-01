@@ -1,0 +1,56 @@
+.jobpostpage{
+  width: 80%;
+}
+
+.jobpostpage-backlink{
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.jobpostpage-header{
+  margin-bottom: 20px;
+}
+
+.jobpostpage-header h2{
+  margin-bottom: 15px;
+}
+
+.jobpostpage-header a, .jobpostpage-header-location, .jobpostpage-timestamp{
+  color: gray;
+}
+
+.jobpostpage-header img{
+  margin-right: 5px;
+
+}
+
+.jobpostpage-header-location{
+  display: block;
+  float: left;
+  clear: left;
+  margin-bottom: 10px;
+}
+
+.jobdetails-container div + div{
+  margin-top: 8px;
+}
+
+.dropdown-item{
+  font-size: 0.9rem;
+}
+
+.application-modal-label{
+  display: inline-block;
+  margin-right: 13px;
+  font-weight: 500;
+  width: 100px;
+}
+
+.application-modal-button{
+  width: 65px !important;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: .300rem;
+  padding-bottom: .300rem;
+  margin-left: 10px;
+}

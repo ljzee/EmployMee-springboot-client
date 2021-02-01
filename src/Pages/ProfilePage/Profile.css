@@ -1,0 +1,96 @@
+.profile-page{
+  width: 80%;
+}
+
+.profile-page-title{
+  margin-bottom: 22px;
+}
+
+.profile-page .card-header{
+  padding: .50rem 1.25rem
+}
+
+.profile-image{
+  border-radius: 50%;
+  height: 95px;
+  width: 95px;
+  display:block;
+  margin:10px auto 10px;
+  object-fit: cover;
+}
+
+.image-picker{
+  border-style: none;
+  display: block ;
+  margin: 0 auto;
+}
+
+.card{
+  overflow:hidden;
+}
+
+.profile-page-card{
+  border-style: none;
+}
+
+
+.edit-button, .add-button{
+  margin-left: 10px;
+}
+
+.add-button{
+  width: 25px;
+  height: 25px;
+  padding: 0;
+}
+
+.welcome-message, .contact-info-title, .contact-info-label{
+  font-weight: 600;
+}
+
+.contact-info{
+  margin-top: 18px;
+}
+
+.contact-info-title{
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid lightgrey;
+}
+
+.edit-field{
+  margin-bottom: 10px !important;
+}
+
+.card-button{
+  padding: 0 !important;
+  margin-left: 10px;
+}
+
+.aboutme-helper-message{
+  opacity: 0.6;
+}
+
+.date-label{
+  width: 100px;
+}
+
+@media (min-width: 992px) {
+  .duration{
+    text-align: center;
+  }
+
+  .duration span{
+    display:block;
+  }
+}
+
+.duration{
+  margin-bottom: 1rem;
+}
+
+.setting-button{
+  padding:0;
+  margin-bottom: 8px;
+  display:block;
+}

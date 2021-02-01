@@ -1,0 +1,130 @@
+.job-search-page{
+  width: 65%;
+}
+
+.job-search-page-title{
+  margin-bottom: 22px;
+}
+
+.job-search-page-search-container{
+  margin-bottom: 22px;
+}
+
+.job-search-page input{
+  width: calc(100% - 120px);
+  overflow:hidden;
+  margin-bottom: 10px
+}
+
+.job-search-page .btn{
+  display: inline;
+  float:right;
+  width: 110px;
+  margin-top: 1px;
+}
+
+.select-wrapper{
+  width: 32.5%;
+}
+
+.location-selector-container{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.location-selector-container input{
+  margin-bottom: 0;
+}
+
+.job-card .card{
+  margin-bottom: 10px;
+}
+
+.job-card{
+  display: block;
+}
+
+.job-card:hover{
+  text-decoration: none;
+}
+
+.job-card-title{
+  font-size: 1.1rem;
+  margin-bottom: 0.20rem;
+}
+
+
+.job-card-company-location, .job-card-description{
+  color: #444444;
+  text-decoration: none;
+}
+
+.job-card-company-location{
+  font-weight: 600;
+  margin-bottom: 0.20rem;
+}
+
+.job-card-company-location:hover{
+  text-decoration: none;
+}
+
+.job-card-description{
+  width: 70%;
+  height: 65px;
+  overflow: hidden;
+  margin-bottom: 0.20rem;
+  font-size: 0.9rem;
+}
+
+.job-card-date-published{
+  font-size: 0.8rem;
+  color: #99A3A4;
+  text-decoration: none;
+}
+
+.job-card-bookmark-btn{
+  background-image: url(../../Images/bookmark1.png);
+  width: 24px;
+  height: 24px;
+  background-size: cover;
+  border: none;
+  float:right;
+  margin-right: 5px;
+  background-color: white;
+  z-index: 100;
+}
+
+.job-card-bookmark-btn:hover{
+  background-image: url(../../Images/bookmark1hover.png);
+}
+
+.bookmarked{
+  background-image: url(../../Images/bookmark1hover.png);
+}
+
+.job-results{
+  margin-bottom: 10px;
+}
+
+.job-results-quantity{
+  margin-bottom: 10px;
+}
+
+.job-results-quantity-select{
+  float: right;
+  margin-bottom: 10px;
+}
+
+.job-results-quantity-select a{
+  color: #007bff !important;
+}
+
+.job-results-quantity-select span + span:before{
+  content: " | ";
+
+}
+
+.job-container{
+  clear: both;
+}

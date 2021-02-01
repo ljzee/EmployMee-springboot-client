@@ -1,0 +1,61 @@
+.welcome-page{
+  width: 75%;
+  margin: 0 auto;
+}
+
+.welcome-page-icon{
+  height: 50px;
+  width: 50px;
+  margin-bottom: 10px
+}
+
+.welcome-page .card{
+  text-align: center;
+  margin-bottom: 0 !important;
+  height: 100%;
+}
+
+.welcome-page .card p{
+  font-size: 0.9rem;
+}
+
+
+.card a{
+  color: black;
+}
+
+.welcome-page .row{
+  margin-bottom: 18px;
+}
+
+.last-row{
+  margin-bottom: 0 !important;
+}
+
+.number{
+  font-size: 36px;
+}
+
+.carousel-button {
+  background-color: transparent !important;
+  border: 1px solid white !important;
+  border-radius: 0 !important;
+}
+
+.carousel-button a{
+  font-weight: lighter;
+  color: white;
+}
+
+.carousel-message{
+  text-align: left;
+  font-weight: lighter;
+  color: white;
+  width: 60%;
+  margin-bottom: 67px !important;
+}
+
+
+.welcomepage-main-button{
+  margin-left: 0 !important;
+}
