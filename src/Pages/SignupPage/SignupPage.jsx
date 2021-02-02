@@ -32,18 +32,18 @@ class SignupPage extends React.Component {
                         username: '',
                         password: '',
                         passwordConfirm: '',
-                        radioGroup: ''
+                        userType: ''
                     }}
                     validationSchema={Yup.object().shape({
                         email: Yup.string().email('Invalid email').required('Email is required'),
                         username: Yup.string().required('Username is required').min(8),
                         password: Yup.string().required('Password is required').matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/, {message: 'Minimum eight characters, at least one uppercase letter, one lowercase letter and one number'}),
                         passwordConfirm: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match').required('You must confirm your password'),
-                        radioGroup: Yup.string().required("You must select an account type")
+                        userType: Yup.string().required("You must select an account type")
                     })}
-                    onSubmit={({ email, username, password, radioGroup }, { setStatus, setSubmitting }) => {
+                    onSubmit={({ email, username, password, userType }, { setStatus, setSubmitting, setFieldError }) => {
                         setStatus();
-                        authenticationService.register(email, username, password, radioGroup)
+                        authenticationService.register(email, username, password, userType)
                             .then(
                                 user => {
                                     const { from } = this.props.location.state || { from: { pathname: "/dashboard" } };
@@ -52,12 +52,22 @@ class SignupPage extends React.Component {
                             ).catch(error => {
                                   setSubmitting(false);
                                   setStatus(error);
+                                  if(error.subErrors) {
+                                    error.subErrors.forEach(subError => {
+                                      if(subError.field && subError.message) {
+                                        setFieldError(subError.field, subError.message);
+                                      }
+                                    });
+                                  }
                             })
 
 
                     }}
                     render={({ values, errors, status, touched, isSubmitting }) => (
                         <Form>
+                            {status &&
+                                <div className={'alert alert-danger'}>{status.message}</div>
+                            }
                             <div className="form-group">
                                 <label htmlFor="email">Email</label>
                                 <Field name="email" type="text" className={'form-control' + (errors.email && touched.email ? ' is-invalid' : '')} />
@@ -79,25 +89,25 @@ class SignupPage extends React.Component {
                                 <ErrorMessage name="passwordConfirm" component="div" className="invalid-feedback" />
                             </div>
                             <RadioButtonGroup
-                              id="radioGroup"
-                              value={values.radioGroup}
-                              error={errors.radioGroup}
-                              touched={touched.radioGroup}
+                              id="userType"
+                              value={values.userType}
+                              error={errors.userType}
+                              touched={touched.userType}
 
                             >
                               <Field
                                 component={RadioButton}
-                                name="radioGroup"
+                                name="userType"
                                 id={Role.User}
                                 label="Personal Account"
                               />
                               <Field
                                 component={RadioButton}
-                                name="radioGroup"
+                                name="userType"
                                 id={Role.Business}
                                 label="Business Account"
                               />
-                              <ErrorMessage name="radioGroup" component="div" className="invalid-feedback d-block"/>
+                              <ErrorMessage name="userType" component="div" className="invalid-feedback d-block"/>
                             </RadioButtonGroup>
                             <br />
                             <div className="form-group">
@@ -107,9 +117,6 @@ class SignupPage extends React.Component {
                                 }
                             </div>
                             <div className='helper'>Already have an account? <Link to="login">Login</Link></div>
-                            {status &&
-                                <div className={'alert alert-danger'}>{status.map((msg, i) => <li key={i}>{msg}</li>)}</div>
-                            }
                         </Form>
                     )}
                 />

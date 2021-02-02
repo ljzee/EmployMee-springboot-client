@@ -18,12 +18,12 @@ export const authenticationService = {
     }
 };
 
-function register(email, username, password, usertype) {
+function register(email, username, password, userType) {
     const configOptions = {
         headers: { 'Content-Type': 'application/json' },
     };
 
-    return axios.post(`${config.apiUrl}/authentication/register`, { 'email': email, 'username': username, 'password': password, 'usertype': usertype}, configOptions)
+    return axios.post(`${config.apiUrl}/authentication/register`, { 'email': email, 'username': username, 'password': password, 'userType': userType}, configOptions)
         .then(user => {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
 
@@ -34,9 +34,9 @@ function register(email, username, password, usertype) {
         })
         .catch((error)=>{
           if(!error.response) {
-            return Promise.reject(["Cannot reach the server, try again later."])
+            return Promise.reject({message: "Cannot reach the server, try again later."})
           }else{
-            return Promise.reject(error.response.data.errors)
+            return Promise.reject(error.response.data)
           }
         });
 }
@@ -56,9 +56,9 @@ function login(username, password) {
         })
         .catch((error)=>{
           if(!error.response) {
-            return Promise.reject(["Cannot reach the server, try again later."])
+            return Promise.reject({message: "Cannot reach the server, try again later."});
           }else{
-            return Promise.reject(error.response.data.errors)
+            return Promise.reject(error.response.data);
           }
         });
 }

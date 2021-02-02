@@ -45,6 +45,9 @@ class LoginPage extends React.Component {
                     }}
                     render={({ errors, status, touched, isSubmitting }) => (
                           <Form>
+                              {status &&
+                                  <div className={'alert alert-danger'}>{status.message}</div>
+                              }
                               <div className="form-group">
                                   <label htmlFor="username">Username</label>
                                   <Field name="username" type="text" className={'form-control' + (errors.username && touched.username ? ' is-invalid' : '')} />
@@ -63,9 +66,6 @@ class LoginPage extends React.Component {
                               </div>
                               <div className='helper'><Link to="/">Forgot your password?</Link></div>
                               <div className='helper'>Need to create an account? <Link to="signup">Create Account</Link></div>
-                              {status &&
-                                  <div className={'alert alert-danger'}>{status.map((msg, i) => <li key={i}>{msg}</li>)}</div>
-                              }
                           </Form>
                     )}
                 />
