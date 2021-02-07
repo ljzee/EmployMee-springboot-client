@@ -24,34 +24,41 @@ class CreateProfilePage extends React.Component {
 
         const userForm =   <Formik
                             initialValues={{
-                                firstname: '',
-                                lastname: '',
-                                phonenumber: '',
-                                personalwebsite: '',
-                                githublink: '',
+                                firstName: '',
+                                lastName: '',
+                                phoneNumber: '',
+                                personalWebsite: '',
+                                githubLink: '',
                                 bio: ''
                             }}
                             validationSchema={Yup.object().shape({
-                                firstname: Yup.string().required('First name is required'),
-                                lastname: Yup.string().required('Last name is required'),
-                                phonenumber: Yup.string(),
-                                personalwebsite: Yup.string(),
-                                githublink: Yup.string(),
+                                firstName: Yup.string().required('First name is required'),
+                                lastName: Yup.string().required('Last name is required'),
+                                phoneNumber: Yup.string(),
+                                personalWebsite: Yup.string(),
+                                githubLink: Yup.string(),
                                 bio: Yup.string()
                             })}
-                            onSubmit={({ firstname, lastname, phonenumber, personalwebsite, githublink, bio }, { setStatus, setSubmitting }) => {
+                            onSubmit={({ firstName, lastName, phoneNumber, personalWebsite, githubLink, bio }, { setStatus, setFieldError, setSubmitting }) => {
                                 setStatus();
-                                userService.createProfile(firstname, lastname, phonenumber, personalwebsite, githublink, bio)
+                                userService.createProfile(firstName, lastName, phoneNumber, personalWebsite, githubLink, bio)
                                     .then(
                                       result=>{
                                         const currentUser = authenticationService.currentUserValue;
                                         const { from } = this.props.location.state || { from: { pathname: `/dashboard` } };
                                         this.props.history.push(from);
                                       }
-                                    ).catch(error =>{
-                                      setSubmitting(false);
-                                      setStatus(error);
-                                    });
+                                    ).catch(error => {
+                                          setSubmitting(false);
+                                          setStatus(error);
+                                          if(error.subErrors) {
+                                            error.subErrors.forEach(subError => {
+                                              if(subError.field && subError.message) {
+                                                setFieldError(subError.field, subError.message);
+                                              }
+                                            });
+                                          }
+                                    })
                             }}
                             render={({ errors, status, touched, isSubmitting }) => (
                               <div>
@@ -61,30 +68,33 @@ class CreateProfilePage extends React.Component {
                                       <strong>Note: </strong>You will have a chance to change this information in the future!<br />
                                   </div>
                                   <Form>
+                                      {status &&
+                                          <div className={'alert alert-danger'}>{status.message}</div>
+                                      }
                                       <div className="form-group">
-                                          <label htmlFor="firstname">First Name</label>
-                                          <Field name="firstname" type="text" className={'form-control' + (errors.firstname && touched.firstname ? ' is-invalid' : '')} />
-                                          <ErrorMessage name="firstname" component="div" className="invalid-feedback" />
+                                          <label htmlFor="firstName">First Name</label>
+                                          <Field name="firstName" type="text" className={'form-control' + (errors.firstName && touched.firstName ? ' is-invalid' : '')} />
+                                          <ErrorMessage name="firstName" component="div" className="invalid-feedback" />
                                       </div>
                                       <div className="form-group">
-                                          <label htmlFor="lastname">Last Name</label>
-                                          <Field name="lastname" type="text" className={'form-control' + (errors.lastname && touched.lastname ? ' is-invalid' : '')} />
-                                          <ErrorMessage name="lastname" component="div" className="invalid-feedback" />
+                                          <label htmlFor="lastName">Last Name</label>
+                                          <Field name="lastName" type="text" className={'form-control' + (errors.lastName && touched.lastName ? ' is-invalid' : '')} />
+                                          <ErrorMessage name="lastName" component="div" className="invalid-feedback" />
                                       </div>
                                       <div className="form-group">
-                                          <label htmlFor="phonenumber">Phone Number (Optional)</label>
-                                          <Field name="phonenumber" type="text" className={'form-control' + (errors.phonenumber && touched.phonenumber ? ' is-invalid' : '')} />
-                                          <ErrorMessage name="phonenumber" component="div" className="invalid-feedback" />
+                                          <label htmlFor="phoneNumber">Phone Number (Optional)</label>
+                                          <Field name="phoneNumber" type="text" className={'form-control' + (errors.phoneNumber && touched.phoneNumber ? ' is-invalid' : '')} />
+                                          <ErrorMessage name="phoneNumber" component="div" className="invalid-feedback" />
                                       </div>
                                       <div className="form-group">
-                                          <label htmlFor="personalwebsite">Personal Website (Optional)</label>
-                                          <Field name="personalwebsite" type="text" className={'form-control' + (errors.personalwebsite && touched.personalwebsite ? ' is-invalid' : '')} />
-                                          <ErrorMessage name="personalwebsite" component="div" className="invalid-feedback" />
+                                          <label htmlFor="personalWebsite">Personal Website (Optional)</label>
+                                          <Field name="personalWebsite" type="text" className={'form-control' + (errors.personalWebsite && touched.personalWebsite ? ' is-invalid' : '')} />
+                                          <ErrorMessage name="personalWebsite" component="div" className="invalid-feedback" />
                                       </div>
                                       <div className="form-group">
-                                          <label htmlFor="githublink">Github Link (Optional)</label>
-                                          <Field name="githublink" type="text" className={'form-control' + (errors.githublink && touched.githublink ? ' is-invalid' : '')} />
-                                          <ErrorMessage name="githublink" component="div" className="invalid-feedback" />
+                                          <label htmlFor="githubLink">Github Link (Optional)</label>
+                                          <Field name="githubLink" type="text" className={'form-control' + (errors.githubLink && touched.githubLink ? ' is-invalid' : '')} />
+                                          <ErrorMessage name="githubLink" component="div" className="invalid-feedback" />
                                       </div>
                                       <div className="form-group">
                                           <label htmlFor="bio">Add a quick bio!</label>
@@ -92,11 +102,8 @@ class CreateProfilePage extends React.Component {
                                           <ErrorMessage name="bio" component="div" className="invalid-feedback" />
                                       </div>
                                       <div style={{textAlign: "right"}}>
-                                      <Button type="submit" variant="primary" className="edit-button" >Create Profile</Button>
+                                        <Button type="submit" variant="primary" className="edit-button" >Create Profile</Button>
                                       </div>
-                                      {status &&
-                                          <div className={'alert alert-danger'} style={{marginTop: "15px"}}>{status.map((msg, i) => <li key={i}>{msg}</li>)}</div>
-                                      }
                                   </Form>
                                   </Card.Body>
                                 </Card>
@@ -108,7 +115,7 @@ class CreateProfilePage extends React.Component {
         const businessForm = <Formik
                                 initialValues={{
                                     companyname: '',
-                                    phonenumber: '',
+                                    phoneNumber: '',
                                     website: '',
                                     description: '',
                                     country: '',
@@ -119,7 +126,7 @@ class CreateProfilePage extends React.Component {
                                 }}
                                 validationSchema={Yup.object().shape({
                                     companyname: Yup.string().required('Company name is required'),
-                                    phonenumber: Yup.string(),
+                                    phoneNumber: Yup.string(),
                                     website: Yup.string(),
                                     description: Yup.string(),
                                     country: Yup.string().required('Country is required'),
@@ -128,9 +135,9 @@ class CreateProfilePage extends React.Component {
                                     streetaddress: Yup.string().required('Street address is required'),
                                     postalcode: Yup.string().required('Postal code is required')
                                 })}
-                                onSubmit={({ companyname, phonenumber, website, description, country, region, city, streetaddress, postalcode}, { setStatus, setSubmitting }) => {
+                                onSubmit={({ companyname, phoneNumber, website, description, country, region, city, streetaddress, postalcode}, { setStatus, setSubmitting }) => {
                                     setStatus();
-                                    businessService.createProfile(companyname, country, region, city, streetaddress, postalcode, phonenumber, website, description)
+                                    businessService.createProfile(companyname, country, region, city, streetaddress, postalcode, phoneNumber, website, description)
                                                    .then(()=>{
                                                      const { from } = this.props.location.state || { from: { pathname: `/dashboard` } };
                                                      this.props.history.push(from);
@@ -222,9 +229,9 @@ class CreateProfilePage extends React.Component {
                                               <ErrorMessage name="postalcode" component="div" className="invalid-feedback" />
                                           </div>
                                           <div className="form-group">
-                                              <label htmlFor="phonenumber">Phone Number (Optional)</label>
-                                              <Field name="phonenumber" type="text" className={'form-control' + (errors.phonenumber && touched.phonenumber ? ' is-invalid' : '')} />
-                                              <ErrorMessage name="phonenumber" component="div" className="invalid-feedback" />
+                                              <label htmlFor="phoneNumber">Phone Number (Optional)</label>
+                                              <Field name="phoneNumber" type="text" className={'form-control' + (errors.phoneNumber && touched.phoneNumber ? ' is-invalid' : '')} />
+                                              <ErrorMessage name="phoneNumber" component="div" className="invalid-feedback" />
                                           </div>
                                           <div className="form-group">
                                               <label htmlFor="website">Website (Optional)</label>

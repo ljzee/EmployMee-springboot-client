@@ -21,19 +21,25 @@ export const userService = {
     getDashboard
 };
 
-function createProfile(firstname, lastname, phonenumber, personalwebsite, githublink, bio) {
+function createProfile(firstName, lastName, phoneNumber, personalWebsite, githubLink, bio) {
   const configOptions = {
       headers: authHeader()
   };
 
-  return axios.post(`${config.apiUrl}/users/profile`, { 'firstname': firstname, 'lastname': lastname, 'phonenumber': phonenumber, 'personalwebsite': personalwebsite, 'githublink': githublink, 'bio': bio}, configOptions)
+  return axios.post(`${config.apiUrl}/user/profile`, { 'firstName': firstName, 'lastName': lastName, 'phoneNumber': phoneNumber, 'personalWebsite': personalWebsite, 'githubLink': githubLink, 'bio': bio}, configOptions)
       .then(response => {
         let currentUser = authenticationService.currentUserValue;
         currentUser.hasProfile = true;
         authenticationService.newCurrentUserValue = currentUser;
 
       })
-      .catch((error)=>Promise.reject(error.response.data.errors));
+      .catch((error)=>{
+        if(!error.response) {
+          return Promise.reject({message: "Cannot reach the server, try again later."})
+        }else{
+          return Promise.reject(error.response.data)
+        }
+      });
 }
 
 function getProfile(userId){
