@@ -60,7 +60,7 @@ function getDashboard(){
       headers: authHeader()
   };
 
-  return axios.get(`${config.apiUrl}/users/dashboard`, configOptions)
+  return axios.get(`${config.apiUrl}/user/dashboard`, configOptions)
               .then(result => result.data)
               .catch((error)=>Promise.reject(error.response.data.errors));
 }

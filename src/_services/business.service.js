@@ -47,7 +47,13 @@ function createProfile(companyName, country, state, city, streetAddress, postalC
         authenticationService.newCurrentUserValue = currentUser;
 
       })
-      .catch((error)=>Promise.reject(error.response.data.errors));
+      .catch((error)=>{
+        if(!error.response) {
+          return Promise.reject({message: "Cannot reach the server, try again later."})
+        }else{
+          return Promise.reject(error.response.data)
+        }
+      });
 }
 
 function getProfile(userId){

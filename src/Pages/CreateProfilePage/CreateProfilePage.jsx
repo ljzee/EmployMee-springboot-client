@@ -58,7 +58,7 @@ class CreateProfilePage extends React.Component {
                                               }
                                             });
                                           }
-                                    })
+                                    });
                             }}
                             render={({ errors, status, touched, isSubmitting }) => (
                               <div>
@@ -114,36 +114,43 @@ class CreateProfilePage extends React.Component {
 
         const businessForm = <Formik
                                 initialValues={{
-                                    companyname: '',
+                                    companyName: '',
                                     phoneNumber: '',
                                     website: '',
                                     description: '',
                                     country: '',
-                                    region: '',
+                                    state: '',
                                     city: '',
-                                    streetaddress: '',
-                                    postalcode: ''
+                                    streetAddress: '',
+                                    postalCode: ''
                                 }}
                                 validationSchema={Yup.object().shape({
-                                    companyname: Yup.string().required('Company name is required'),
+                                    companyName: Yup.string().required('Company name is required'),
                                     phoneNumber: Yup.string(),
                                     website: Yup.string(),
                                     description: Yup.string(),
                                     country: Yup.string().required('Country is required'),
-                                    region: Yup.string().required('State is required'),
+                                    state: Yup.string().required('State is required'),
                                     city: Yup.string().required('City is required'),
-                                    streetaddress: Yup.string().required('Street address is required'),
-                                    postalcode: Yup.string().required('Postal code is required')
+                                    streetAddress: Yup.string().required('Street address is required'),
+                                    postalCode: Yup.string().required('Postal code is required')
                                 })}
-                                onSubmit={({ companyname, phoneNumber, website, description, country, region, city, streetaddress, postalcode}, { setStatus, setSubmitting }) => {
+                                onSubmit={({ companyName, phoneNumber, website, description, country, state, city, streetAddress, postalCode}, { setStatus, setFieldError, setSubmitting }) => {
                                     setStatus();
-                                    businessService.createProfile(companyname, country, region, city, streetaddress, postalcode, phoneNumber, website, description)
+                                    businessService.createProfile(companyName, country, state, city, streetAddress, postalCode, phoneNumber, website, description)
                                                    .then(()=>{
                                                      const { from } = this.props.location.state || { from: { pathname: `/dashboard` } };
                                                      this.props.history.push(from);
-                                                   }).catch(error =>{
-                                                     setSubmitting(false);
-                                                     setStatus(error);
+                                                   }).catch(error => {
+                                                         setSubmitting(false);
+                                                         setStatus(error);
+                                                         if(error.subErrors) {
+                                                           error.subErrors.forEach(subError => {
+                                                             if(subError.field && subError.message) {
+                                                               setFieldError(subError.field, subError.message);
+                                                             }
+                                                           });
+                                                         }
                                                    });
                                 }}
                                 render={({ errors, status, touched, isSubmitting, setFieldValue, setFieldTouched }) => (
@@ -154,13 +161,16 @@ class CreateProfilePage extends React.Component {
                                           <strong>Note: </strong>You will have a chance to change this information in the future!<br />
                                       </div>
                                       <Form>
+                                          {status &&
+                                              <div className={'alert alert-danger'}>{status.message}</div>
+                                          }
                                           <div className="form-group">
-                                              <label htmlFor="companyname">Company Name</label>
-                                              <Field name="companyname" type="text" className={'form-control' + (errors.companyname && touched.companyname ? ' is-invalid' : '')} />
-                                              <ErrorMessage name="companyname" component="div" className="invalid-feedback" />
+                                              <label htmlFor="companyName">Company Name</label>
+                                              <Field name="companyName" type="text" className={'form-control' + (errors.companyName && touched.companyName ? ' is-invalid' : '')} />
+                                              <ErrorMessage name="companyName" component="div" className="invalid-feedback" />
                                           </div>
                                           <LocationPicker setFieldValue={setFieldValue}>
-                                          {({countryOptions, regionOptions, cityOptions, country, region, city, handleChange}) => (
+                                          {({countryOptions, stateOptions, cityOptions, country, state, city, handleChange}) => (
                                             <React.Fragment>
                                               <div className="form-group">
                                                 <label htmlFor="country">Country</label>
@@ -181,19 +191,19 @@ class CreateProfilePage extends React.Component {
                                               </div>
 
                                               <div className="form-group">
-                                                <label htmlFor="region">State</label>
+                                                <label htmlFor="state">State</label>
                                                 <Select
                                                   onChange={handleChange}
-                                                  options={regionOptions}
-                                                  name="region"
-                                                  onBlur={()=>setFieldTouched("region", true)}
-                                                  value={region}
+                                                  options={stateOptions}
+                                                  name="state"
+                                                  onBlur={()=>setFieldTouched("state", true)}
+                                                  value={state}
                                                 />
-                                                {errors.region && touched.region && (
+                                                {errors.state && touched.state && (
                                                   <div
                                                     style={{ color: "#dc3545", marginTop: ".25rem", fontSize:"80%" }}
                                                   >
-                                                    {errors.region}
+                                                    {errors.state}
                                                   </div>
                                                 )}
                                               </div>
@@ -219,14 +229,14 @@ class CreateProfilePage extends React.Component {
                                           )}
                                           </LocationPicker>
                                           <div className="form-group">
-                                              <label htmlFor="streetaddress">Street Address</label>
-                                              <Field name="streetaddress" type="text" className={'form-control' + (errors.streetaddress && touched.streetaddress ? ' is-invalid' : '')} />
-                                              <ErrorMessage name="streetaddress" component="div" className="invalid-feedback" />
+                                              <label htmlFor="streetAddress">Street Address</label>
+                                              <Field name="streetAddress" type="text" className={'form-control' + (errors.streetAddress && touched.streetAddress ? ' is-invalid' : '')} />
+                                              <ErrorMessage name="streetAddress" component="div" className="invalid-feedback" />
                                           </div>
                                           <div className="form-group">
-                                              <label htmlFor="postalcode">Postal Code</label>
-                                              <Field name="postalcode" type="text" className={'form-control' + (errors.postalcode && touched.postalcode ? ' is-invalid' : '')} />
-                                              <ErrorMessage name="postalcode" component="div" className="invalid-feedback" />
+                                              <label htmlFor="postalCode">Postal Code</label>
+                                              <Field name="postalCode" type="text" className={'form-control' + (errors.postalCode && touched.postalCode ? ' is-invalid' : '')} />
+                                              <ErrorMessage name="postalCode" component="div" className="invalid-feedback" />
                                           </div>
                                           <div className="form-group">
                                               <label htmlFor="phoneNumber">Phone Number (Optional)</label>
@@ -244,11 +254,8 @@ class CreateProfilePage extends React.Component {
                                               <ErrorMessage name="description" component="div" className="invalid-feedback" />
                                           </div>
                                           <div style={{textAlign: "right"}}>
-                                          <Button type="submit" variant="primary" className="edit-button" >Create Profile</Button>
+                                            <Button type="submit" variant="primary" className="edit-button" >Create Profile</Button>
                                           </div>
-                                          {status &&
-                                              <div className={'alert alert-danger'} style={{marginTop: "15px"}}>{status.map((msg, i) => <li key={i}>{msg}</li>)}</div>
-                                          }
                                       </Form>
                                       </Card.Body>
                                     </Card>
@@ -267,22 +274,4 @@ class CreateProfilePage extends React.Component {
     }
 }
 
-
-/*                                          <div className="form-group">
-                                            <label htmlFor="country">Country</label>
-                                            <Select/>
-                                          </div>
-                                          <div className="form-group">
-                                            <label htmlFor="state">State</label>
-                                            <Select/>
-                                          </div>
-                                          <div className="form-group">
-                                            <label htmlFor="city">City</label>
-                                            <Select/>
-                                          </div>
-                                          <div className="form-group">
-                                              <label htmlFor="streetaddress">Street Address</label>
-                                              <Field name="companyname" type="text" className={'form-control' + (errors.companyname && touched.companyname ? ' is-invalid' : '')} />
-                                          </div>
-                                          */
 export { CreateProfilePage };
