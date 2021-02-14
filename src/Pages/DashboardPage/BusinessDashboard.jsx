@@ -53,7 +53,7 @@ class BusinessDashboard extends React.Component{
             <Card>
               <Card.Header>Current Openings <Link style={{color: '#007bff'}}className="float-right" to='/managepostings'>View my jobs</Link></Card.Header>
               <div className="business-profile-job-container">
-                {this.state.jobs.map(job=>(
+                {this.state.jobs.length > 0 && this.state.jobs.map(job=>(
                   <a key={job.id} onClick={(e)=>{
                     e.preventDefault();
                     let formattedJobTitle = job.title.replace(/\s+/g, '-').replace(/\//, '-').toLowerCase();
@@ -64,6 +64,7 @@ class BusinessDashboard extends React.Component{
                     <div className="job-location">{`${job.city}, ${job.state}`}</div>
                   </a>
                 ))}
+                {this.state.jobs.length === 0 && <div className="no-current-openings">No current openings.</div>}
               </div>
             </Card>
           </Col>

@@ -59,6 +59,12 @@
   padding-bottom: 20px;
 }
 
+.no-current-openings {
+  text-align: center;
+  color: lightgrey;
+  font-style: italic;
+}
+
 .business-profile-job-container-job + a{
   margin-left: 20px;
 }
