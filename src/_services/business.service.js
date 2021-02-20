@@ -60,7 +60,7 @@ function createProfile(companyName, country, state, city, streetAddress, postalC
 function getProfile(userId){
   return axios.get(`${config.apiUrl}/business/profile/${userId}`, {})
               .then(result => result.data)
-              .catch((error) => Promise.reject(error.response.data.errors))
+              .catch((error) => Promise.reject(error.response.data.errors));
 
 }
 
@@ -69,7 +69,7 @@ function addJobPost(title, duration, positionType, addressId, openings, descript
       headers: authHeader()
   };
   return axios.post(`${config.apiUrl}/business/jobpost`, {title: title, duration: duration, positionType: positionType, addressId: addressId, openings: openings, description: description, salary: salary, deadline: deadline, resumeRequired: resumeRequired, coverletterRequired: coverletterRequired, otherRequired: otherRequired, status: status}, configOptions)
-              .catch((error) => Promise.reject(error.response.data))
+              .catch((error) => Promise.reject(error.response.data));
 }
 
 function getAllBusinessJobPost(){
@@ -78,7 +78,7 @@ function getAllBusinessJobPost(){
   };
   return axios.get(`${config.apiUrl}/business/jobpost`, configOptions)
               .then(result => result.data)
-              .catch((error) => Promise.reject(error.response.data.errors))
+              .catch((error) => Promise.reject(error.response.data.errors));
 }
 
 function getJobPost(jobPostId){
@@ -87,7 +87,7 @@ function getJobPost(jobPostId){
   };
   return axios.get(`${config.apiUrl}/business/jobpost/${jobPostId}`, configOptions)
               .then(result => result.data)
-              .catch((error) => Promise.reject(error.response.data.errors))
+              .catch((error) => Promise.reject(error.response.data.errors));
 }
 
 function updateJobPost(jobPostId, jobTitle, duration, positionType, location, openings, jobDescription, salary, deadline, resumeRequired, coverletterRequired, otherRequired){
@@ -95,7 +95,7 @@ function updateJobPost(jobPostId, jobTitle, duration, positionType, location, op
       headers: authHeader()
   };
   return axios.put(`${config.apiUrl}/business/jobpost/${jobPostId}`, {jobTitle: jobTitle, duration: duration, positionType: positionType, location: location, openings: openings, jobDescription: jobDescription, salary: salary, deadline: deadline, resumeRequired: resumeRequired, coverletterRequired: coverletterRequired, otherRequired: otherRequired}, configOptions)
-              .catch((error) => Promise.reject(error.response.data.errors))
+              .catch((error) => Promise.reject(error.response.data.errors));
 }
 
 function updateJobPostStatus(jobPostId, status){
@@ -103,7 +103,7 @@ function updateJobPostStatus(jobPostId, status){
       headers: authHeader()
   };
   return axios.put(`${config.apiUrl}/business/jobpost/${jobPostId}/status`, {status: status}, configOptions)
-              .catch((error) => Promise.reject(error.response.data.errors))
+              .catch((error) => Promise.reject(error.response.data.errors));
 }
 
 function updateJobPostDeadline(jobPostId, deadline){
@@ -111,7 +111,7 @@ function updateJobPostDeadline(jobPostId, deadline){
       headers: authHeader()
   };
   return axios.put(`${config.apiUrl}/business/jobpost/${jobPostId}/deadline`, {deadline: deadline}, configOptions)
-              .catch((error) => Promise.reject(error.response.data.errors))
+              .catch((error) => Promise.reject(error.response.data));
 }
 
 function deleteJobPost(jobPostId){
@@ -119,7 +119,7 @@ function deleteJobPost(jobPostId){
       headers: authHeader()
   };
   return axios.delete(`${config.apiUrl}/business/jobpost/${jobPostId}`, configOptions)
-              .catch((error) => Promise.reject(error.response.data.errors))
+              .catch((error) => Promise.reject(error.response.data.errors));
 }
 
 
@@ -129,7 +129,7 @@ function getJobApplicants(jobPostId){
   };
   return axios.get(`${config.apiUrl}/business/jobpost/${jobPostId}/applicants`, configOptions)
               .then(result => result.data)
-              .catch((error) => Promise.reject(error.response.data.errors))
+              .catch((error) => Promise.reject(error.response.data.errors));
 }
 
 function getApplicantFiles(jobPostId, applicantId){

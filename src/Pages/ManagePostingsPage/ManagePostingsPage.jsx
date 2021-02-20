@@ -78,6 +78,13 @@ class ManagePostingsPage extends React.Component{
             <DatePicker value={props.original.deadline} onChange={(date)=>{
               businessService.updateJobPostDeadline(props.original.id, date.toISOString().split("T")[0])
                              .then(()=>{this.fetchPostings()})
+                             .catch(error => {
+                               if(error.subErrors && error.subErrors.length && error.subErrors[0].field === "deadline") {
+                                 alert(error.subErrors[0].message);
+                               } else {
+                                 alert("Unable to update deadline for job post.");
+                               }
+                             });
             }}/>
           </div>
         )
