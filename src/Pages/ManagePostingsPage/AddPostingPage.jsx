@@ -19,13 +19,17 @@ class AddPostingPage extends React.Component{
   }
 
   componentDidMount(){
-    businessService.getProfile(authenticationService.currentUserValue.id)
-                   .then(profile=>{
-                     let options = profile.addresses.map(address => ({label: `${address.street_name_no}, ${address.city}, ${address.state}`, value: address.id}))
-                     this.setState({locationOptions: options})
-                   }).catch(error=>{
+    businessService.getBusinessAddresses()
+                   .then(addresses => {
+                     let options = addresses.map(address => ({
+                       label: `${address.streetNameNo}, ${address.city}, ${address.state}`,
+                       value: address.id
+                     }));
+                     this.setState({locationOptions: options});
+                   }).catch(error => {
                      console.log(error);
-                   })
+                   });
+
   }
 
   render(){
@@ -39,6 +43,13 @@ class AddPostingPage extends React.Component{
 
     const submissionTypeRef = React.createRef()
 
+    const getBooleanValueFromString = function(value) {
+      if(typeof value === "string") {
+        return value === "true";
+      }
+      return false;
+    };
+
     return(
       <div className="addposting-page mx-auto">
         <h3 className="addposting-page-title">Add a new job posting...</h3>
@@ -46,32 +57,32 @@ class AddPostingPage extends React.Component{
           <Card.Body>
             <Formik
               initialValues={{
-                  jobtitle: '',
+                  title: '',
                   duration: '',
-                  positiontype: '',
-                  location: '',
+                  positionType: '',
+                  addressId: '',
                   openings: '',
-                  jobdescription:'',
+                  description:'',
                   salary: '',
                   deadline: '',
-                  resumerequired:'',
-                  coverletterrequired: '',
-                  otherrequired:'',
+                  resumeRequired:'',
+                  coverletterRequired: '',
+                  otherRequired:'',
               }}
               validationSchema={Yup.object().shape({
-                  jobtitle: Yup.string().required('Job title is required'),
+                  title: Yup.string().required('Job title is required'),
                   duration: Yup.string().required('Duration is required'),
-                  positiontype: Yup.string().required('Position type is required'),
-                  location: Yup.string().required('Location is required'),
+                  positionType: Yup.string().required('Position type is required'),
+                  addressId: Yup.string().required('Location is required'),
                   openings: Yup.number().positive('No. of openings must be greater than 0').required('No. of openings is required'),
-                  jobdescription: Yup.string(),
+                  description: Yup.string(),
                   salary: Yup.string(),
                   deadline: Yup.string(),
-                  resumerequired: Yup.boolean().required('You must select whether resume is required'),
-                  coverletterrequired: Yup.boolean().required('You must select whether cover letter is required'),
-                  otherrequired: Yup.boolean().required('You must select whether other document is required'),
+                  resumeRequired: Yup.boolean().required('You must select whether resume is required'),
+                  coverletterRequired: Yup.boolean().required('You must select whether cover letter is required'),
+                  otherRequired: Yup.boolean().required('You must select whether other document is required')
               })}
-              onSubmit={({ jobtitle, duration, positiontype, location, openings, jobdescription, salary, deadline, resumerequired, coverletterrequired, otherrequired }, { setStatus, setSubmitting }) => {
+              onSubmit={({ title, duration, positionType, addressId, openings, description, salary, deadline, resumeRequired, coverletterRequired, otherRequired }, { setStatus, setFieldError, setSubmitting }) => {
                   setStatus();
                   let status;
                   if(submissionTypeRef.current === 'publish'){
@@ -79,20 +90,35 @@ class AddPostingPage extends React.Component{
                   }else{
                     status = JobPostType.Draft;
                   }
-                  businessService.addJobPost(jobtitle, duration, positiontype, location, openings, jobdescription, salary, deadline, resumerequired, coverletterrequired, otherrequired, status)
+
+                  resumeRequired = getBooleanValueFromString(resumeRequired);
+                  coverletterRequired = getBooleanValueFromString(coverletterRequired);
+                  otherRequired = getBooleanValueFromString(otherRequired);
+
+                  businessService.addJobPost(title, duration, positionType, addressId, openings, description, salary, deadline, resumeRequired, coverletterRequired, otherRequired, status)
                                  .then(()=>{this.props.history.push('/managepostings')})
-                                 .catch(error=>{
-                                   setSubmitting(false);
-                                   setStatus(error);
-                                 })
+                                 .catch(error => {
+                                       setSubmitting(false);
+                                       setStatus(error);
+                                       if(error.subErrors) {
+                                         error.subErrors.forEach(subError => {
+                                           if(subError.field && subError.message) {
+                                             setFieldError(subError.field, subError.message);
+                                           }
+                                         });
+                                       }
+                                 });
 
               }}
               render={({ values, errors, status, touched, isSubmitting, setFieldTouched, setFieldValue, handleSubmit}) => (
                     <Form>
+                        {status &&
+                            <div className={'alert alert-danger'}>{status.message}</div>
+                        }
                         <div className="form-group">
-                            <label htmlFor="jobtitle">Job Title</label>
-                            <Field name="jobtitle" type="text" className={'form-control' + (errors.jobtitle && touched.jobtitle ? ' is-invalid' : '')} />
-                            <ErrorMessage name="jobtitle" component="div" className="invalid-feedback" />
+                            <label htmlFor="title">Job Title</label>
+                            <Field name="title" type="text" className={'form-control' + (errors.title && touched.title ? ' is-invalid' : '')} />
+                            <ErrorMessage name="title" component="div" className="invalid-feedback" />
                         </div>
                         <div className="form-group">
                             <label htmlFor="duration">Duration</label>
@@ -100,28 +126,28 @@ class AddPostingPage extends React.Component{
                             <ErrorMessage name="duration" component="div" className="invalid-feedback" />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="positiontype">Position Type</label>
+                            <label htmlFor="positionType">Position Type</label>
                             <Select options={positionTypeOptions} onChange={(option)=>{
-                              setFieldValue("positiontype", option.value);
-                            }} onBlur={()=>setFieldTouched('positiontype', true)} />
-                            {errors.positiontype && touched.positiontype && (
+                              setFieldValue("positionType", option.value);
+                            }} onBlur={()=>setFieldTouched('positionType', true)} />
+                            {errors.positionType && touched.positionType && (
                               <div
                                 style={{ color: "#dc3545", marginTop: ".25rem", fontSize:"80%" }}
                               >
-                                {errors.positiontype}
+                                {errors.positionType}
                               </div>
                             )}
                         </div>
                         <div className="form-group">
-                            <label htmlFor="location">Location</label>
+                            <label htmlFor="addressId">Location</label>
                             <Select options={this.state.locationOptions} onChange={(option)=>{
-                              setFieldValue("location", option.value);
-                            }} onBlur={()=>setFieldTouched('location', true)} />
-                            {errors.location && touched.location && (
+                              setFieldValue("addressId", option.value);
+                            }} onBlur={()=>setFieldTouched('addressId', true)} />
+                            {errors.addressId && touched.addressId && (
                               <div
                                 style={{ color: "#dc3545", marginTop: ".25rem", fontSize:"80%" }}
                               >
-                                {errors.location}
+                                {errors.addressId}
                               </div>
                             )}
                         </div>
@@ -131,9 +157,9 @@ class AddPostingPage extends React.Component{
                             <ErrorMessage name="openings" component="div" className="invalid-feedback" />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="jobdescription">Job Description</label>
-                            <Field name="jobdescription" component="textarea" rows="5" className={'form-control' + (errors.jobdescription && touched.jobdescription ? ' is-invalid' : '')} />
-                            <ErrorMessage name="jobdescription" component="div" className="invalid-feedback" />
+                            <label htmlFor="description">Job Description</label>
+                            <Field name="description" component="textarea" rows="5" className={'form-control' + (errors.description && touched.description ? ' is-invalid' : '')} />
+                            <ErrorMessage name="description" component="div" className="invalid-feedback" />
                         </div>
                         <div className="form-group">
                             <label htmlFor="salary">Salary</label>
@@ -159,75 +185,72 @@ class AddPostingPage extends React.Component{
                             </div>
                         </div>
                         <RadioButtonGroup
-                          id="resumerequired"
-                          value={values.resumerequired}
-                          error={errors.resumerequired}
-                          touched={touched.resumerequired}
+                          id="resumeRequired"
+                          value={values.resumeRequired}
+                          error={errors.resumeRequired}
+                          touched={touched.resumeRequired}
                         >
-                          <label style={{display: "block"}} htmlFor="resumerequired">Resume required</label>
+                          <label style={{display: "block"}} htmlFor="resumeRequired">Resume required</label>
                           <Field
                             component={RadioButton}
-                            name="resumerequired"
+                            name="resumeRequired"
                             id="true"
                             label="Yes"
                           />
                           <Field
                             component={RadioButton}
-                            name="resumerequired"
+                            name="resumeRequired"
                             id="false"
                             label="No"
                           />
-                          <ErrorMessage name="resumerequired" component="div" className="invalid-feedback d-block"/>
+                          <ErrorMessage name="resumeRequired" component="div" className="invalid-feedback d-block"/>
                         </RadioButtonGroup>
                         <RadioButtonGroup
-                          id="coverletterrequired"
-                          value={values.coverletterrequired}
-                          error={errors.coverletterrequired}
-                          touched={touched.coverletterrequired}
+                          id="coverletterRequired"
+                          value={values.coverletterRequired}
+                          error={errors.coverletterRequired}
+                          touched={touched.coverletterRequired}
                         >
-                          <label style={{display: "block"}} htmlFor="coverletterrequired">Cover letter required</label>
+                          <label style={{display: "block"}} htmlFor="coverletterRequired">Cover letter required</label>
                           <Field
                             component={RadioButton}
-                            name="coverletterrequired"
+                            name="coverletterRequired"
                             id="true"
                             label="Yes"
                           />
                           <Field
                             component={RadioButton}
-                            name="coverletterrequired"
+                            name="coverletterRequired"
                             id="false"
                             label="No"
                           />
-                          <ErrorMessage name="coverletterrequired" component="div" className="invalid-feedback d-block"/>
+                          <ErrorMessage name="coverletterRequired" component="div" className="invalid-feedback d-block"/>
                         </RadioButtonGroup>
                         <RadioButtonGroup
-                          id="otherrequired"
-                          value={values.otherrequired}
-                          error={errors.otherrequired}
-                          touched={touched.otherrequired}
+                          id="otherRequired"
+                          value={values.otherRequired}
+                          error={errors.otherRequired}
+                          touched={touched.otherRequired}
                         >
-                          <label style={{display: "block"}} htmlFor="otherrequired">Other document required</label>
+                          <label style={{display: "block"}} htmlFor="otherRequired">Other document required</label>
                           <Field
                             component={RadioButton}
-                            name="otherrequired"
+                            name="otherRequired"
                             id="true"
                             label="Yes"
                           />
                           <Field
                             component={RadioButton}
-                            name="otherrequired"
+                            name="otherRequired"
                             id="false"
                             label="No"
                           />
-                          <ErrorMessage name="otherrequired" component="div" className="invalid-feedback d-block"/>
+                          <ErrorMessage name="otherRequired" component="div" className="invalid-feedback d-block"/>
                         </RadioButtonGroup>
                         <div style={{textAlign: "right"}}>
                           <Button type="submit" onClick={() => { submissionTypeRef.current = 'save'}} variant="primary" className="edit-button" >Save As Draft</Button>
                           <Button type="submit" onClick={() => { submissionTypeRef.current = 'publish'}} variant="primary" className="edit-button" >Publish Posting</Button>
                         </div>
-                        {status &&
-                            <div className={'alert alert-danger'} style={{marginTop: "15px"}}>{status.map((msg, i) => <li key={i}>{msg}</li>)}</div>
-                        }
                     </Form>
               )}
             />

@@ -22,7 +22,8 @@ export const businessService = {
     updateProfile,
     addUpdate,
     deleteUpdate,
-    getDashboard
+    getDashboard,
+    getBusinessAddresses
 };
 
 function createProfile(companyName, country, state, city, streetAddress, postalCode, phoneNumber, website, description) {
@@ -63,12 +64,12 @@ function getProfile(userId){
 
 }
 
-function addJobPost(jobTitle, duration, positionType, location, openings, jobDescription, salary, deadline, resumeRequired, coverletterRequired, otherRequired, status){
+function addJobPost(title, duration, positionType, addressId, openings, description, salary, deadline, resumeRequired, coverletterRequired, otherRequired, status){
   const configOptions = {
       headers: authHeader()
   };
-  return axios.post(`${config.apiUrl}/business/jobpost`, {jobTitle: jobTitle, duration: duration, positionType: positionType, location: location, openings: openings, jobDescription: jobDescription, salary: salary, deadline: deadline, resumeRequired: resumeRequired, coverletterRequired: coverletterRequired, otherRequired: otherRequired, status: status}, configOptions)
-              .catch((error) => Promise.reject(error.response.data.errors))
+  return axios.post(`${config.apiUrl}/business/jobpost`, {title: title, duration: duration, positionType: positionType, addressId: addressId, openings: openings, description: description, salary: salary, deadline: deadline, resumeRequired: resumeRequired, coverletterRequired: coverletterRequired, otherRequired: otherRequired, status: status}, configOptions)
+              .catch((error) => Promise.reject(error.response.data))
 }
 
 function getAllBusinessJobPost(){
@@ -191,6 +192,16 @@ function getDashboard(){
   };
 
   return axios.get(`${config.apiUrl}/business/dashboard`, configOptions)
+              .then(result => result.data)
+              .catch((error)=>Promise.reject(error.response.data.errors));
+}
+
+function getBusinessAddresses(){
+  const configOptions = {
+      headers: authHeader()
+  };
+
+  return axios.get(`${config.apiUrl}/business/address`, configOptions)
               .then(result => result.data)
               .catch((error)=>Promise.reject(error.response.data.errors));
 }

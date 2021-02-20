@@ -1,6 +1,6 @@
 export const PositionType = {
-    Fulltime: 'Full-time',
-    Parttime: 'Part-time',
-    Temporary: 'Temporary',
-    Internship: 'Internship'
+    Fulltime: 'FULLTIME',
+    Parttime: 'PARTTIME',
+    Temporary: 'TEMPORARY',
+    Internship: 'INTERNSHIP'
 }
