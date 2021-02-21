@@ -82,7 +82,7 @@ class ManagePostingsPage extends React.Component{
                                if(error.subErrors && error.subErrors.length && error.subErrors[0].field === "deadline") {
                                  alert(error.subErrors[0].message);
                                } else {
-                                 alert("Unable to update deadline for job post.");
+                                 alert("Unable to update deadline for job post. Please try again.");
                                }
                              });
             }}/>
@@ -115,7 +115,9 @@ class ManagePostingsPage extends React.Component{
             {props.original.status === JobPostType.Draft && <button onClick={()=>{
               businessService.deleteJobPost(props.original.id)
                              .then(()=>{this.fetchPostings()})
-                             .catch(error => {console.log(error)});
+                             .catch(error => {
+                               alert("Unable to delete job post. Please try again.")
+                             });
             }} className="action-delete-button"><img src={require('../../Images/bin.png')}/></button>
             }
           </div>

@@ -119,7 +119,7 @@ function deleteJobPost(jobPostId){
       headers: authHeader()
   };
   return axios.delete(`${config.apiUrl}/business/jobpost/${jobPostId}`, configOptions)
-              .catch((error) => Promise.reject(error.response.data.errors));
+              .catch((error) => Promise.reject(error.response.data));
 }
 
 
