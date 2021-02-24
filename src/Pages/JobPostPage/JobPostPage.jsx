@@ -20,8 +20,8 @@ class JobPostPage extends React.Component{
     this.state = {
       loading:true,
       edit: this.props.location.state.edit,
-      jobTitle: '',
-      companyAddresses: [],
+      title: '',
+      locationOptions: [],
       companyName: '',
       companyPhoneNumber: '',
       companyWebsite: '',
@@ -53,24 +53,24 @@ class JobPostPage extends React.Component{
                    .then(jobPost => {
                      this.setState({
                        loading: false,
-                       jobTitle: jobPost.title,
-                       companyAddresses: jobPost.addresses.map(address => ({label: `${address.street_name_no}, ${address.city}, ${address.state}`, value: address.id})),
-                       companyName: jobPost.company_name,
-                       companyPhoneNumber: jobPost.phone_number,
-                       companyWebsite: jobPost.website,
-                       resumeRequired: jobPost.resume_required,
-                       coverletterRequired: jobPost.coverletter_required,
-                       otherRequired: jobPost.other_required,
-                       datePublished: jobPost.date_published,
+                       title: jobPost.title,
+                       locationOptions: jobPost.businessAddresses.map(address => ({label: `${address.streetNameNo}, ${address.city}, ${address.state}`, value: address.id})),
+                       companyName: jobPost.companyName,
+                       companyPhoneNumber: jobPost.companyPhoneNumber,
+                       companyWebsite: jobPost.companyWebsite,
+                       resumeRequired: jobPost.resumeRequired,
+                       coverletterRequired: jobPost.coverletterRequired,
+                       otherRequired: jobPost.otherRequired,
+                       datePublished: jobPost.datePublished,
                        deadline: jobPost.deadline,
                        description: jobPost.description,
                        duration: jobPost.duration,
                        openings: jobPost.openings,
-                       positionType: jobPost.position_type,
+                       positionType: jobPost.positionType,
                        salary: jobPost.salary,
                        status: jobPost.status,
-                       jobAddress: jobPost.addresses.find(post => (post.id === jobPost.a_id))
-                     })
+                       jobAddress: jobPost.jobAddresses.length ? jobPost.jobAddresses[0] : null
+                     });
                    })
   }
 
@@ -101,20 +101,35 @@ class JobPostPage extends React.Component{
                       <Dropdown.Item onClick={this.toggleEdit}>Edit</Dropdown.Item>
                       <Dropdown.Item onClick={()=>{
                         businessService.updateJobPostStatus(this.props.location.state.id, JobPostType.Closed)
-                                       .then(()=>{this.fetchJobPost()})
+                                       .then(()=>{
+                                         this.fetchJobPost();
+                                       })
+                                       .catch(error => {
+                                         alert("Unable to update job post status. Please try again.");
+                                       });
                       }}>Stop Accepting Applicants</Dropdown.Item>
-                      <Dropdown.Item onClick={()=>{this.props.history.push(`${this.props.location.pathname}/applicants`, {id: this.props.location.state.id, title: this.state.jobTitle})}}>View Applicants</Dropdown.Item>
+                      <Dropdown.Item onClick={()=>{this.props.history.push(`${this.props.location.pathname}/applicants`, {id: this.props.location.state.id, title: this.state.title})}}>View Applicants</Dropdown.Item>
                      </DropdownButton>
     }else if(this.state.status === 'DRAFT'){
       actionButton = <DropdownButton id="dropdown-basic-button" title="Actions" className="float-right">
                       <Dropdown.Item onClick={this.toggleEdit}>Edit</Dropdown.Item>
                       <Dropdown.Item onClick={()=>{
                         businessService.updateJobPostStatus(this.props.location.state.id, JobPostType.Open)
-                                       .then(()=>{this.fetchJobPost()})
+                                       .then(()=>{
+                                         this.fetchJobPost();
+                                       })
+                                       .catch(error => {
+                                         alert("Unable to update job post status. Please try again.");
+                                       });
                       }}>Publish Posting</Dropdown.Item>
                       <Dropdown.Item onClick={()=>{
                         businessService.deleteJobPost(this.props.location.state.id)
-                                       .then(()=>{this.props.history.push('/managepostings')})
+                                       .then(()=>{
+                                         this.props.history.push('/managepostings');
+                                       })
+                                       .catch(error => {
+                                         alert("Unable to delete job post. Please try again.");
+                                       });
                       }}>Delete Posting</Dropdown.Item>
                      </DropdownButton>
     }else{
@@ -122,9 +137,14 @@ class JobPostPage extends React.Component{
                       <Dropdown.Item onClick={this.toggleEdit}>Edit</Dropdown.Item>
                       <Dropdown.Item onClick={()=>{
                         businessService.updateJobPostStatus(this.props.location.state.id, JobPostType.Open)
-                                       .then(()=>{this.fetchJobPost()})
+                                       .then(()=>{
+                                         this.fetchJobPost();
+                                       })
+                                       .catch(error => {
+                                         alert("Unable to update job post status. Please try again.");
+                                       });
                       }}>Republish Posting</Dropdown.Item>
-                      <Dropdown.Item onClick={()=>{this.props.history.push(`${this.props.location.pathname}/applicants`, {id: this.props.location.state.id, title: this.state.jobTitle})}}>View Applicants</Dropdown.Item>
+                      <Dropdown.Item onClick={()=>{this.props.history.push(`${this.props.location.pathname}/applicants`, {id: this.props.location.state.id, title: this.state.title})}}>View Applicants</Dropdown.Item>
                      </DropdownButton>
     }
     return actionButton;
@@ -137,7 +157,7 @@ class JobPostPage extends React.Component{
     const jobPost = <JobPost
                       getActionButton={this.getActionButton}
                       getStatusBadge={this.getStatusBadge}
-                      jobTitle={this.state.jobTitle}
+                      title={this.state.title}
                       status={this.state.status}
                       companyName={this.state.companyName}
                       jobAddress={this.state.jobAddress}
@@ -164,54 +184,77 @@ class JobPostPage extends React.Component{
           { label: "Internship", value: PositionType.Internship},
         ];
 
+        const selectedPositionTypeOption = positionTypeOptions.find(option => {
+            return option.value === this.state.positionType;
+        });
+
+        let selectedLocationOption;
+        if(this.state.jobAddress) {
+          selectedLocationOption = this.state.locationOptions.find(option => {
+            return option.value === this.state.jobAddress.id;
+          });
+        }
+
         const editForm = <Formik
                           initialValues={{
-                              jobtitle: this.state.jobTitle,
+                              title: this.state.title,
                               duration: this.state.duration,
-                              positiontype: this.state.positionType,
-                              location: this.state.jobAddress.id,
+                              positionType: this.state.positionType,
+                              addressId: this.state.jobAddress.id,
                               openings: this.state.openings,
-                              jobdescription:this.state.description,
+                              description:this.state.description,
                               salary: this.state.salary,
                               deadline: this.state.deadline,
-                              resumerequired:this.state.resumeRequired,
-                              coverletterrequired: this.state.coverletterRequired,
-                              otherrequired:this.state.otherRequired,
+                              resumeRequired:this.state.resumeRequired,
+                              coverletterRequired: this.state.coverletterRequired,
+                              otherRequired:this.state.otherRequired,
                           }}
                           validationSchema={Yup.object().shape({
-                              jobtitle: Yup.string().required('Job title is required'),
+                              title: Yup.string().required('Job title is required'),
                               duration: Yup.string().required('Duration is required'),
-                              positiontype: Yup.string().required('Position type is required'),
-                              location: Yup.string().required('Location is required'),
+                              positionType: Yup.string().required('Position type is required'),
+                              addressId: Yup.string().required('Location is required'),
                               openings: Yup.number().positive('No. of openings must be greater than 0').required('No. of openings is required'),
-                              jobdescription: Yup.string(),
+                              description: Yup.string(),
                               salary: Yup.string(),
                               deadline: Yup.string(),
-                              resumerequired: Yup.boolean().required('You must select whether resume is required'),
-                              coverletterrequired: Yup.boolean().required('You must select whether cover letter is required'),
-                              otherrequired: Yup.boolean().required('You must select whether other document is required'),
+                              resumeRequired: Yup.boolean().required('You must select whether resume is required'),
+                              coverletterRequired: Yup.boolean().required('You must select whether cover letter is required'),
+                              otherRequired: Yup.boolean().required('You must select whether other document is required')
                           })}
-                          onSubmit={({ jobtitle, duration, positiontype, location, openings, jobdescription, salary, deadline, resumerequired, coverletterrequired, otherrequired }, { setStatus, setSubmitting }) => {
+                          onSubmit={({ title, duration, positionType, addressId, openings, description, salary, deadline, resumeRequired, coverletterRequired, otherRequired }, { setStatus, setFieldError, setSubmitting }) => {
                               setStatus();
+
                               businessService.updateJobPost(
                                                 this.props.location.state.id,
-                                                jobtitle,
+                                                title,
                                                 duration,
-                                                positiontype,
-                                                location,
+                                                positionType,
+                                                addressId,
                                                 openings,
-                                                jobdescription,
+                                                description,
                                                 salary,
                                                 deadline,
-                                                resumerequired,
-                                                coverletterrequired,
-                                                otherrequired
+                                                resumeRequired,
+                                                coverletterRequired,
+                                                otherRequired
                                               )
                                              .then(()=>{
                                                this.props.history.replace(this.props.history.location.pathname, {...this.props.history.location.state, edit:false});
                                                this.toggleEdit();
                                                this.fetchJobPost();
                                              })
+                                             .catch(error => {
+                                                   setSubmitting(false);
+                                                   setStatus(error);
+                                                   if(error.subErrors) {
+                                                     error.subErrors.forEach(subError => {
+                                                       if(subError.field && subError.message) {
+                                                         setFieldError(subError.field, subError.message);
+                                                       }
+                                                     });
+                                                   }
+                                             });
 
                           }}
                           render={({values, errors, status, touched, isSubmitting, setFieldTouched, setFieldValue, handleSubmit}) =>(
@@ -224,11 +267,14 @@ class JobPostPage extends React.Component{
 
                                   <Col md={9}>
                                       <h3 className="jobpostpage-header">Edit Job Posting</h3>
+                                      {status &&
+                                          <div className={'alert alert-danger'}>{status.message}</div>
+                                      }
                                       <Card>
                                         <Card.Header>Job Title</Card.Header>
                                         <Card.Body>
-                                          <Field name="jobtitle" type="text" className={'form-control' + (errors.jobtitle && touched.jobtitle ? ' is-invalid' : '')} />
-                                          <ErrorMessage name="jobtitle" component="div" className="invalid-feedback" />
+                                          <Field name="title" type="text" className={'form-control' + (errors.title && touched.title ? ' is-invalid' : '')} />
+                                          <ErrorMessage name="title" component="div" className="invalid-feedback" />
                                         </Card.Body>
                                       </Card>
                                   </Col>
@@ -240,8 +286,8 @@ class JobPostPage extends React.Component{
                                         <Card.Header>Job Description</Card.Header>
                                         <Card.Body>
                                           <div className="form-group">
-                                              <Field name="jobdescription" component="textarea" rows="5" className={'form-control' + (errors.jobdescription && touched.jobdescription ? ' is-invalid' : '')} />
-                                              <ErrorMessage name="jobdescription" component="div" className="invalid-feedback" />
+                                              <Field name="description" component="textarea" rows="5" className={'form-control' + (errors.description && touched.description ? ' is-invalid' : '')} />
+                                              <ErrorMessage name="description" component="div" className="invalid-feedback" />
                                           </div>
                                         </Card.Body>
                                       </Card>
@@ -250,15 +296,18 @@ class JobPostPage extends React.Component{
                                         <Card.Header>Job Details</Card.Header>
                                         <Card.Body>
                                           <div className="form-group">
-                                              <label htmlFor="positiontype">Position Type</label>
-                                              <Select options={positionTypeOptions} onChange={(option)=>{
-                                                setFieldValue("positiontype", option.value);
-                                              }} onBlur={()=>setFieldTouched('positiontype', true)} />
-                                              {errors.positiontype && touched.positiontype && (
+                                              <label htmlFor="positionType">Position Type</label>
+                                              <Select options={positionTypeOptions}
+                                                      onChange={(option)=>{
+                                                        setFieldValue("positionType", option.value);
+                                                      }}
+                                                      onBlur={()=>setFieldTouched('positionType', true)}
+                                                      defaultValue={selectedPositionTypeOption} />
+                                              {errors.positionType && touched.positionType && (
                                                 <div
                                                   style={{ color: "#dc3545", marginTop: ".25rem", fontSize:"80%" }}
                                                 >
-                                                  {errors.positiontype}
+                                                  {errors.positionType}
                                                 </div>
                                               )}
                                           </div>
@@ -278,15 +327,20 @@ class JobPostPage extends React.Component{
                                               <ErrorMessage name="salary" component="div" className="invalid-feedback" />
                                           </div>
                                           <div className="form-group">
-                                              <label htmlFor="location">Location</label>
-                                              <Select options={this.state.companyAddresses} onChange={(option)=>{
-                                                setFieldValue("location", option.value);
-                                              }} onBlur={()=>setFieldTouched('location', true)}/>
-                                              {errors.location && touched.location && (
+                                              <label htmlFor="addressId">Location</label>
+                                              <Select options={this.state.locationOptions}
+                                                      onChange={(option)=>{
+                                                        setFieldValue("addressId", option.value);
+                                                      }}
+                                                      onBlur={()=>{
+                                                        setFieldTouched('addressId', true)
+                                                      }}
+                                                      defaultValue={selectedLocationOption}/>
+                                              {errors.addressId && touched.addressId && (
                                                 <div
                                                   style={{ color: "#dc3545", marginTop: ".25rem", fontSize:"80%" }}
                                                 >
-                                                  {errors.location}
+                                                  {errors.addressId}
                                                 </div>
                                               )}
                                           </div>
@@ -314,69 +368,45 @@ class JobPostPage extends React.Component{
                                               )}
                                               </div>
                                           </div>
-                                          <RadioButtonGroup
-                                            id="resumerequired"
-                                            value={values.resumerequired}
-                                            error={errors.resumerequired}
-                                            touched={touched.resumerequired}
-                                          >
-                                            <label style={{display: "block"}} htmlFor="resumerequired">Resume required</label>
-                                            <Field
-                                              component={RadioButton}
-                                              name="resumerequired"
-                                              id="true"
-                                              label="Yes"
-                                            />
-                                            <Field
-                                              component={RadioButton}
-                                              name="resumerequired"
-                                              id="false"
-                                              label="No"
-                                            />
-                                            <ErrorMessage name="resumerequired" component="div" className="invalid-feedback d-block"/>
-                                          </RadioButtonGroup>
-                                          <RadioButtonGroup
-                                            id="coverletterrequired"
-                                            value={values.coverletterrequired}
-                                            error={errors.coverletterrequired}
-                                            touched={touched.coverletterrequired}
-                                          >
-                                            <label style={{display: "block"}} htmlFor="coverletterrequired">Cover letter required</label>
-                                            <Field
-                                              component={RadioButton}
-                                              name="coverletterrequired"
-                                              id="true"
-                                              label="Yes"
-                                            />
-                                            <Field
-                                              component={RadioButton}
-                                              name="coverletterrequired"
-                                              id="false"
-                                              label="No"
-                                            />
-                                            <ErrorMessage name="coverletterrequired" component="div" className="invalid-feedback d-block"/>
-                                          </RadioButtonGroup>
-                                          <RadioButtonGroup
-                                            id="otherrequired"
-                                            value={values.otherrequired}
-                                            error={errors.otherrequired}
-                                            touched={touched.otherrequired}
-                                          >
-                                            <label style={{display: "block"}} htmlFor="otherrequired">Other required</label>
-                                            <Field
-                                              component={RadioButton}
-                                              name="otherrequired"
-                                              id="true"
-                                              label="Yes"
-                                            />
-                                            <Field
-                                              component={RadioButton}
-                                              name="otherrequired"
-                                              id="false"
-                                              label="No"
-                                            />
-                                            <ErrorMessage name="otherrequired" component="div" className="invalid-feedback d-block"/>
-                                          </RadioButtonGroup>
+
+                                          <div className="radio-group">
+                                            <label style={{display: "block"}} htmlFor="resumeRequired">Resume required</label>
+                                            <label className="radio-button">
+                                              <Field type="radio" name="resumeRequired" checked={values.resumeRequired} onChange={() => {setFieldValue("resumeRequired", true);}}/>
+                                              Yes
+                                            </label>
+                                            <label className="radio-button">
+                                              <Field type="radio" name="resumeRequired" checked={!values.resumeRequired} onChange={() => {setFieldValue("resumeRequired", false);}}/>
+                                              No
+                                            </label>
+                                          </div>
+                                          <ErrorMessage name="resumeRequired" component="div" className="invalid-feedback d-block"/>
+
+                                          <div className="radio-group">
+                                            <label style={{display: "block"}} htmlFor="coverletterRequired">Coverletter required</label>
+                                            <label className="radio-button">
+                                              <Field type="radio" name="coverletterRequired" checked={values.coverletterRequired} onChange={() => {setFieldValue("coverletterRequired", true);}}/>
+                                              Yes
+                                            </label>
+                                            <label className="radio-button">
+                                              <Field type="radio" name="coverletterRequired" checked={!values.coverletterRequired} onChange={() => {setFieldValue("coverletterRequired", false);}}/>
+                                              No
+                                            </label>
+                                          </div>
+                                          <ErrorMessage name="coverletterRequired" component="div" className="invalid-feedback d-block"/>
+
+                                          <div className="radio-group">
+                                            <label style={{display: "block"}} htmlFor="otherRequired">Other required</label>
+                                            <label className="radio-button">
+                                              <Field type="radio" name="otherRequired" checked={values.otherRequired} onChange={() => {setFieldValue("otherRequired", true);}}/>
+                                              Yes
+                                            </label>
+                                            <label className="radio-button">
+                                              <Field type="radio" name="otherRequired" checked={!values.otherRequired} onChange={() => {setFieldValue("otherRequired", false);}}/>
+                                              No
+                                            </label>
+                                          </div>
+                                          <ErrorMessage name="otherRequired" component="div" className="invalid-feedback d-block"/>
                                         </Card.Body>
                                       </Card>
 

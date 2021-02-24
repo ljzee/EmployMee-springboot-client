@@ -90,12 +90,12 @@ function getJobPost(jobPostId){
               .catch((error) => Promise.reject(error.response.data.errors));
 }
 
-function updateJobPost(jobPostId, jobTitle, duration, positionType, location, openings, jobDescription, salary, deadline, resumeRequired, coverletterRequired, otherRequired){
+function updateJobPost(jobPostId, title, duration, positionType, addressId, openings, description, salary, deadline, resumeRequired, coverletterRequired, otherRequired){
   const configOptions = {
       headers: authHeader()
   };
-  return axios.put(`${config.apiUrl}/business/jobpost/${jobPostId}`, {jobTitle: jobTitle, duration: duration, positionType: positionType, location: location, openings: openings, jobDescription: jobDescription, salary: salary, deadline: deadline, resumeRequired: resumeRequired, coverletterRequired: coverletterRequired, otherRequired: otherRequired}, configOptions)
-              .catch((error) => Promise.reject(error.response.data.errors));
+  return axios.put(`${config.apiUrl}/business/jobpost/${jobPostId}`, {title: title, duration: duration, positionType: positionType, addressId: addressId, openings: openings, description: description, salary: salary, deadline: deadline, resumeRequired: resumeRequired, coverletterRequired: coverletterRequired, otherRequired: otherRequired}, configOptions)
+              .catch((error) => Promise.reject(error.response.data));
 }
 
 function updateJobPostStatus(jobPostId, status){
@@ -103,7 +103,7 @@ function updateJobPostStatus(jobPostId, status){
       headers: authHeader()
   };
   return axios.put(`${config.apiUrl}/business/jobpost/${jobPostId}/status`, {status: status}, configOptions)
-              .catch((error) => Promise.reject(error.response.data.errors));
+              .catch((error) => Promise.reject(error.response.data));
 }
 
 function updateJobPostDeadline(jobPostId, deadline){

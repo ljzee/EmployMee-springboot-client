@@ -23,7 +23,12 @@ class ManagePostingsPage extends React.Component{
     businessService.getAllBusinessJobPost()
                    .then(posts => {
                      this.setState({
-                       data: posts.map(post => ({position: post.title, location: `${post.city}, ${post.state}`, deadline: post.deadline, applicantsquantity: post.count, status: post.status, id: post.id})),
+                       data: posts.map(post => ({position: post.title,
+                                                 location: post.jobAddresses.length ? `${post.jobAddresses[0].city}, ${post.jobAddresses[0].state}` : "",
+                                                 deadline: post.deadline,
+                                                 applicationCount: post.applicationCount,
+                                                 status: post.status,
+                                                 id: post.id})),
                        loading: false
                      })
                    })
@@ -91,7 +96,7 @@ class ManagePostingsPage extends React.Component{
       }
     },{
       Header: 'No. of Apps',
-      accessor: 'applicantsquantity',
+      accessor: 'applicationCount',
       width: 100,
       style:{
           textAlign: "center"

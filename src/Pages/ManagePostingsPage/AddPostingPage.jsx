@@ -43,13 +43,6 @@ class AddPostingPage extends React.Component{
 
     const submissionTypeRef = React.createRef()
 
-    const getBooleanValueFromString = function(value) {
-      if(typeof value === "string") {
-        return value === "true";
-      }
-      return false;
-    };
-
     return(
       <div className="addposting-page mx-auto">
         <h3 className="addposting-page-title">Add a new job posting...</h3>
@@ -65,9 +58,9 @@ class AddPostingPage extends React.Component{
                   description:'',
                   salary: '',
                   deadline: '',
-                  resumeRequired:'',
-                  coverletterRequired: '',
-                  otherRequired:'',
+                  resumeRequired: false,
+                  coverletterRequired: false,
+                  otherRequired: false,
               }}
               validationSchema={Yup.object().shape({
                   title: Yup.string().required('Job title is required'),
@@ -90,10 +83,6 @@ class AddPostingPage extends React.Component{
                   }else{
                     status = JobPostType.Draft;
                   }
-
-                  resumeRequired = getBooleanValueFromString(resumeRequired);
-                  coverletterRequired = getBooleanValueFromString(coverletterRequired);
-                  otherRequired = getBooleanValueFromString(otherRequired);
 
                   businessService.addJobPost(title, duration, positionType, addressId, openings, description, salary, deadline, resumeRequired, coverletterRequired, otherRequired, status)
                                  .then(()=>{this.props.history.push('/managepostings')})
@@ -184,69 +173,46 @@ class AddPostingPage extends React.Component{
                             )}
                             </div>
                         </div>
-                        <RadioButtonGroup
-                          id="resumeRequired"
-                          value={values.resumeRequired}
-                          error={errors.resumeRequired}
-                          touched={touched.resumeRequired}
-                        >
+
+                        <div className="radio-group">
                           <label style={{display: "block"}} htmlFor="resumeRequired">Resume required</label>
-                          <Field
-                            component={RadioButton}
-                            name="resumeRequired"
-                            id="true"
-                            label="Yes"
-                          />
-                          <Field
-                            component={RadioButton}
-                            name="resumeRequired"
-                            id="false"
-                            label="No"
-                          />
-                          <ErrorMessage name="resumeRequired" component="div" className="invalid-feedback d-block"/>
-                        </RadioButtonGroup>
-                        <RadioButtonGroup
-                          id="coverletterRequired"
-                          value={values.coverletterRequired}
-                          error={errors.coverletterRequired}
-                          touched={touched.coverletterRequired}
-                        >
-                          <label style={{display: "block"}} htmlFor="coverletterRequired">Cover letter required</label>
-                          <Field
-                            component={RadioButton}
-                            name="coverletterRequired"
-                            id="true"
-                            label="Yes"
-                          />
-                          <Field
-                            component={RadioButton}
-                            name="coverletterRequired"
-                            id="false"
-                            label="No"
-                          />
-                          <ErrorMessage name="coverletterRequired" component="div" className="invalid-feedback d-block"/>
-                        </RadioButtonGroup>
-                        <RadioButtonGroup
-                          id="otherRequired"
-                          value={values.otherRequired}
-                          error={errors.otherRequired}
-                          touched={touched.otherRequired}
-                        >
-                          <label style={{display: "block"}} htmlFor="otherRequired">Other document required</label>
-                          <Field
-                            component={RadioButton}
-                            name="otherRequired"
-                            id="true"
-                            label="Yes"
-                          />
-                          <Field
-                            component={RadioButton}
-                            name="otherRequired"
-                            id="false"
-                            label="No"
-                          />
-                          <ErrorMessage name="otherRequired" component="div" className="invalid-feedback d-block"/>
-                        </RadioButtonGroup>
+                          <label className="radio-button">
+                            <Field type="radio" name="resumeRequired" checked={values.resumeRequired} onChange={() => {setFieldValue("resumeRequired", true);}}/>
+                            Yes
+                          </label>
+                          <label className="radio-button">
+                            <Field type="radio" name="resumeRequired" checked={!values.resumeRequired} onChange={() => {setFieldValue("resumeRequired", false);}}/>
+                            No
+                          </label>
+                        </div>
+                        <ErrorMessage name="resumeRequired" component="div" className="invalid-feedback d-block"/>
+
+                        <div className="radio-group">
+                          <label style={{display: "block"}} htmlFor="coverletterRequired">Coverletter required</label>
+                          <label className="radio-button">
+                            <Field type="radio" name="coverletterRequired" checked={values.coverletterRequired} onChange={() => {setFieldValue("coverletterRequired", true);}}/>
+                            Yes
+                          </label>
+                          <label className="radio-button">
+                            <Field type="radio" name="coverletterRequired" checked={!values.coverletterRequired} onChange={() => {setFieldValue("coverletterRequired", false);}}/>
+                            No
+                          </label>
+                        </div>
+                        <ErrorMessage name="coverletterRequired" component="div" className="invalid-feedback d-block"/>
+
+                        <div className="radio-group">
+                          <label style={{display: "block"}} htmlFor="otherRequired">Other required</label>
+                          <label className="radio-button">
+                            <Field type="radio" name="otherRequired" checked={values.otherRequired} onChange={() => {setFieldValue("otherRequired", true);}}/>
+                            Yes
+                          </label>
+                          <label className="radio-button">
+                            <Field type="radio" name="otherRequired" checked={!values.otherRequired} onChange={() => {setFieldValue("otherRequired", false);}}/>
+                            No
+                          </label>
+                        </div>
+                        <ErrorMessage name="otherRequired" component="div" className="invalid-feedback d-block"/>
+
                         <div style={{textAlign: "right"}}>
                           <Button type="submit" onClick={() => { submissionTypeRef.current = 'save'}} variant="primary" className="edit-button" >Save As Draft</Button>
                           <Button type="submit" onClick={() => { submissionTypeRef.current = 'publish'}} variant="primary" className="edit-button" >Publish Posting</Button>

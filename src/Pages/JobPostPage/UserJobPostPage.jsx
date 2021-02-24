@@ -113,9 +113,8 @@ class UserJobPostPage extends React.Component{
                businessId: result[0].b_id,
                showApplicationModal: false,
                fields: generatedFields
-             })
-           })
-    //Promise.all() fileService.getAllUserFiles() + userService.getJobPost
+             });
+           });
 
   }
 

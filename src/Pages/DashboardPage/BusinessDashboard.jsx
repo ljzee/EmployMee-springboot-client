@@ -61,7 +61,9 @@ class BusinessDashboard extends React.Component{
                     this.props.history.push(`/${route}/${formattedJobTitle}`, {id: job.id, edit: false});
                   }} className="business-profile-job-container-job">
                     <div className="job-title">{job.title}</div>
-                    <div className="job-location">{`${job.city}, ${job.state}`}</div>
+                    {job.jobAddresses.length &&
+                      <div className="job-location">{`${job.jobAddresses[0].city}, ${job.jobAddresses[0].state}`}</div>
+                    }
                   </a>
                 ))}
                 {this.state.jobs.length === 0 && <div className="no-current-openings">No current openings.</div>}
