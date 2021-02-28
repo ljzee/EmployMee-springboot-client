@@ -81,12 +81,12 @@ class JobSearchPage extends React.Component{
     if(selector === 'country'){
       this.setState({
         country: value,
-        region: '',
+        state: '',
         city: ''
       })
-    }else if(selector === 'region'){
+    }else if(selector === 'state'){
       this.setState({
-        region: value,
+        state: value,
         city: ''
       })
     }else{
@@ -155,13 +155,13 @@ class JobSearchPage extends React.Component{
             <Form.Control name="search" onChange={this.handleChange} type="text" placeholder="Search job title or company" />
 
             <LocationPicker setFieldValue={this.setLocationFieldValue}>
-            {({countryOptions, regionOptions, cityOptions, country, region, city, handleChange}) => (
+            {({countryOptions, stateOptions, cityOptions, country, state, city, handleChange}) => (
               <div className="location-selector-container">
                 <div className="select-wrapper">
                   <Select name="country" options={countryOptions} value={country} onChange={handleChange} placeholder="Country" styles={styles}/>
                 </div>
                 <div className="select-wrapper">
-                  <Select name="region" options={regionOptions} value={region} onChange={handleChange} placeholder="State" styles={styles}/>
+                  <Select name="state" options={stateOptions} value={state} onChange={handleChange} placeholder="State" styles={styles}/>
                 </div>
                 <div className="select-wrapper">
                   <Select name="city" options={cityOptions} value={city} onChange={handleChange} placeholder="City" styles={styles}/>
@@ -188,19 +188,25 @@ class JobSearchPage extends React.Component{
           <div className="job-container">
             {this.state.paginateObject !== null &&
              this.state.jobPosts.slice(this.state.paginateObject.startIndex, this.state.paginateObject.endIndex + 1)
-                                .map(job => (<JobCard
-                                              key={job.id}
-                                              jobId={job.id}
-                                              title={job.title}
-                                              positionType={job.position_type}
-                                              companyName={job.company_name}
-                                              datePublished={job.date_published}
-                                              description={job.description}
-                                              state={job.state}
-                                              city={job.city}
-                                              bookmarked={job.bookmarked}
-                                              applied={job.applied}
-                                              />))
+                                .map(jobPost => {
+                                    const jobAddress = jobPost.jobAddresses.length ? jobPost.jobAddresses[0] : null;
+                                    const state = jobAddress ? jobAddress.state : "";
+                                    const city = jobAddress ? jobAddress.city : "";
+
+                                    return <JobCard
+                                            key={jobPost.id}
+                                            jobId={jobPost.id}
+                                            title={jobPost.title}
+                                            positionType={jobPost.positionType}
+                                            companyName={jobPost.companyName}
+                                            datePublished={jobPost.datePublished}
+                                            description={jobPost.description}
+                                            state={state}
+                                            city={city}
+                                            bookmarked={jobPost.bookmarked}
+                                            applied={jobPost.applied}
+                                            />
+                                  })
             }
           </div>
           <Pagination size="md">
