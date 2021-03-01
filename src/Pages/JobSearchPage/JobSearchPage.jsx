@@ -115,7 +115,9 @@ class JobSearchPage extends React.Component{
                            }
                  })
                })
-               .catch(error=>{console.log(error)})
+               .catch(()=>{
+                 alert("Unable to search job posts. Please try again.");
+               });
   }
 
   handlePaginationChange(page){

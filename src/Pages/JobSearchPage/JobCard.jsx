@@ -20,13 +20,15 @@ class JobCard extends React.Component{
           <Card.Body>
             <button onClick={(e)=>{
               e.preventDefault();
-              if(this.state.bookmarked){
-                userService.removeBookmark(this.props.jobId)
-                           .then(()=>{this.setState({bookmarked: false})})
-              }else{
-                userService.addBookmark(this.props.jobId)
-                           .then(()=>{this.setState({bookmarked: true})})
-              }
+              const bookmarked = this.state.bookmarked;
+              userService.toggleBookmark(this.props.jobId)
+                         .then(()=>{
+                           this.setState({bookmarked: !bookmarked});
+                         })
+                         .catch(()=>{
+                           alert("Unable to toggle bookmark for job post.");
+                         });
+
             }} className={(this.state.bookmarked ? "job-card-bookmark-btn bookmarked" : "job-card-bookmark-btn")}/>
             <div className="job-card-title">{this.props.title} <span>({this.props.positionType})</span> {this.props.applied && <Badge variant="success">Applied</Badge>}</div>
             <div className="job-card-company-location">{this.props.companyName} - {this.props.city}, {this.props.state}</div>

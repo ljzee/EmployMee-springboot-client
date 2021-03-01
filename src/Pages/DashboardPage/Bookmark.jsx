@@ -13,8 +13,13 @@ const Bookmark = (props) => {
         <div className="bookmark-info-content">({props.company})</div>
       </div>
       <div className="bookmark-button"><Button onClick={()=>{
-        userService.removeBookmark(props.jobId)
-                   .then(()=>{props.fetchDashboard()})
+        userService.toggleBookmark(props.jobId)
+                   .then(() => {
+                     props.fetchDashboard()
+                   })
+                   .catch(() => {
+                     alert("Unable to unsave jobpost.");
+                   });
       }} className="unsave-button">Unsave</Button></div>
     </div>
   )

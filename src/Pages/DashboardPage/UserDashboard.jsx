@@ -106,11 +106,11 @@ class UserDashboard extends React.Component{
               <div className="bookmark-container">
                 {this.state.bookmarks.map(bookmark => (
                   <Bookmark
-                    key={bookmark.id}
-                    title={bookmark.title}
-                    company={bookmark.company_name}
-                    jobId={bookmark.id}
-                    businessId={bookmark.b_id}
+                    key={bookmark.jobPostId}
+                    title={bookmark.jobPostTitle}
+                    company={bookmark.companyName}
+                    jobId={bookmark.jobPostId}
+                    businessId={bookmark.companyId}
                     fetchDashboard={this.fetchDashboard}
                   />
                 ))}

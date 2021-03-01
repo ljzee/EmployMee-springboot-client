@@ -28,11 +28,4 @@ class DashboardPage extends React.Component {
     }
 }
 
-/*
-<div style={{width: "100%", height: 40, lineHeight:"40px"}}>
-  <h5 style={{display: "inline-block"}}>Bookmarked Postings</h5>
-  <img className="icon"  src={require('../../Images/bookmark.png')} alt="bookmark"/>
-</div>
-*/
-
 export { DashboardPage };
