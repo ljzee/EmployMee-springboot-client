@@ -34,6 +34,7 @@ class UserJobPostPage extends React.Component{
       jobAddress: '',
       businessId : '',
       applied: false,
+      bookmarked: false,
       showApplicationModal: false,
       fields: []
     }
@@ -77,9 +78,18 @@ class UserJobPostPage extends React.Component{
     }else if(this.state.status === JobPostType.Closed){
       actionButton = <DropdownButton id="dropdown-basic-button" title="Actions" className="float-right" disabled/>
     }else{
+      let bookmarkText = this.state.bookmarked ? 'Unbookmark Job' : "Bookmark Job";
+
       actionButton = <DropdownButton id="dropdown-basic-button" title="Actions" className="float-right">
                       <Dropdown.Item onClick={()=>{this.toggleShowApplyModal()}}>Apply</Dropdown.Item>
-                      <Dropdown.Item>Bookmark Job</Dropdown.Item>
+                      <Dropdown.Item onClick={()=>{
+                        userService.toggleBookmark(this.props.location.state.id)
+                                   .then(this.fetchJobPost())
+                                   .catch(() => {
+                                    alert("Unable to toggle bookmark. Please try again.");
+                                   });
+                      }}>{bookmarkText}
+                      </Dropdown.Item>
                      </DropdownButton>
     }
     return actionButton;
@@ -90,29 +100,33 @@ class UserJobPostPage extends React.Component{
 
     Promise.all([userService.getJobPost(this.props.location.state.id), fileService.getAllUserFiles()])
            .then(result => {
-             let generatedFields = this.generateFields(result[0].resume_required, result[0].coverletter_required, result[0].other_required, result[1])
+             let generatedFields = this.generateFields(result[0].resumeRequired, result[0].coverletterRequired, result[0].otherRequired, result[1])
+
+             const jobAddress = result[0].jobAddresses.length ? result[0].jobAddresses[0] : null;
+
              this.setState({
                loading: false,
                jobTitle: result[0].title,
-               companyName: result[0].company_name,
-               companyPhoneNumber: result[0].phone_number,
-               companyWebsite: result[0].website,
-               resumeRequired: result[0].resume_required,
-               coverletterRequired: result[0].coverletter_required,
-               otherRequired: result[0].other_required,
-               datePublished: result[0].date_published,
+               companyName: result[0].companyName,
+               companyPhoneNumber: result[0].companyPhoneNumber,
+               companyWebsite: result[0].companyWebsite,
+               resumeRequired: result[0].resumeRequired,
+               coverletterRequired: result[0].coverletterRequired,
+               otherRequired: result[0].otherRequired,
+               datePublished: result[0].datePublished,
                deadline: result[0].deadline,
                description: result[0].description,
                duration: result[0].duration,
                openings: result[0].openings,
-               positionType: result[0].position_type,
+               positionType: result[0].positionType,
                salary: result[0].salary,
                status: result[0].status,
                applied: result[0].applied,
-               jobAddress: result[0].addresses.find(post => (post.id === result[0].a_id)),
-               businessId: result[0].b_id,
+               jobAddress: jobAddress,
+               businessId: result[0].companyId,
                showApplicationModal: false,
-               fields: generatedFields
+               fields: generatedFields,
+               bookmarked: result[0].bookmarked
              });
            });
 

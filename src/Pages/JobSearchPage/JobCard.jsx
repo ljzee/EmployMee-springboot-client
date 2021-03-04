@@ -26,7 +26,7 @@ class JobCard extends React.Component{
                            this.setState({bookmarked: !bookmarked});
                          })
                          .catch(()=>{
-                           alert("Unable to toggle bookmark for job post.");
+                           alert("Unable to toggle bookmark for job post. Please try again.");
                          });
 
             }} className={(this.state.bookmarked ? "job-card-bookmark-btn bookmarked" : "job-card-bookmark-btn")}/>

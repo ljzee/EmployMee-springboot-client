@@ -48,7 +48,7 @@ function getAllUserFiles(){
   const configOptions = {
       headers: authHeader()
   };
-  return axios.get(`${config.apiUrl}/files`, configOptions)
+  return axios.get(`${config.apiUrl}/document`, configOptions)
               .then(res=>{
                 return res.data;
               })

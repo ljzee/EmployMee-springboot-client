@@ -14,7 +14,7 @@ const JobPost = (props) => {
         <Col md={9}>
           <div className="jobpostpage-header">
             {props.getActionButton()}
-            <h3>{props.title} {props.status === 'DRAFT' && <span>[Draft]</span>}{props.status === 'CLOSED' && <span>[Closed]</span>}</h3>
+            <h3>{props.jobTitle} {props.status === 'DRAFT' && <span>[Draft]</span>}{props.status === 'CLOSED' && <span>[Closed]</span>}</h3>
             {props.businessId && <Link className="jobpostpage-header-location" to={{pathname: `${props.location.pathname}/${props.companyName}`, state: {id: props.businessId}}}><img height="22" width="22" src={require('../../Images/building.png')}/>{props.companyName}</Link>}
             {!props.businessId && <Link className="jobpostpage-header-location" to="/companyprofile"><img height="22" width="22" src={require('../../Images/building.png')}/>{props.companyName}</Link>}
             <span className="jobpostpage-header-location"><img height="22" width="22" src={require('../../Images/location.png')}/>{`${props.jobAddress.city}, ${props.jobAddress.state}`}</span>

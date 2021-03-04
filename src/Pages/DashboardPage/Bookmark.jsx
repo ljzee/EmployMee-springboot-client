@@ -18,7 +18,7 @@ const Bookmark = (props) => {
                      props.fetchDashboard()
                    })
                    .catch(() => {
-                     alert("Unable to unsave jobpost.");
+                     alert("Unable to unsave jobpost. Please try again.");
                    });
       }} className="unsave-button">Unsave</Button></div>
     </div>
