@@ -7,3 +7,4 @@ export * from './rules';
 export * from './positiontype';
 export * from './jobposttype';
 export * from './applicationstatus';
+export * from './documenttype';

@@ -5,15 +5,16 @@ import * as Yup from 'yup';
 import {Link} from 'react-router-dom';
 import './Documents.css';
 import Select from 'react-select';
-import { FilePicker } from 'react-file-picker'
+import { FilePicker } from 'react-file-picker';
+import {DocumentType} from '@/_helpers';
 
 import { authenticationService, fileService } from '@/_services';
 
 const filterOptions = [
-  { label: "All", value: "All"},
-  { label: "Resume", value: "Resume" },
-  { label: "Cover Letter", value: "Cover Letter" },
-  { label: "Others", value: "Others" },
+  { label: "All", value: "ALL"},
+  { label: "Resume", value: DocumentType.Resume},
+  { label: "Cover Letter", value: DocumentType.Coverletter},
+  { label: "Other", value: DocumentType.Other},
 ];
 
 class Document extends React.Component {
@@ -53,6 +54,18 @@ class Document extends React.Component {
     }))
   }
 
+  getLabelForFileType(fileType) {
+    switch(fileType) {
+      case DocumentType.Resume:
+        return "Resume";
+      case DocumentType.Coverletter:
+        return "Cover Letter";
+      case DocumentType.Other:
+      default:
+        return "Other";
+    }
+  }
+
   render(){
     return(
       <tr>
@@ -81,8 +94,8 @@ class Document extends React.Component {
                            .catch(error=>console.log(error))
             }}>{this.state.fileName}</Button></td>
           }
-        <td>{this.props.fileType}</td>
-        <td className="col_4">{`${this.props.fileSize}kb`}</td>
+        <td>{this.getLabelForFileType(this.props.fileType)}</td>
+        <td className="col_4">{`${Math.ceil(this.props.fileSize / 1000)}kb`}</td>
         <td className="col_5">{this.props.dateUploaded}</td>
         {this.state.editFile
           ?
@@ -252,10 +265,10 @@ class DocumentsPage extends React.Component {
               </thead>
               <tbody>
                 {this.state.documents.map((document, index)=>{
-                  if(this.state.documentFilter === 'All' && document.file_name.toLowerCase().includes(this.state.documentSearch.toLowerCase())){
-                    return (<Document key={document.file_id} fileId={document.file_id} documentNo={index + 1} fileName={document.file_name} fileType={document.file_type} fileSize={document.file_size} dateUploaded={document.date_uploaded} deleteFile={this.deleteFile} fetchUserFiles={this.fetchUserFiles}/>)
+                  if(this.state.documentFilter === 'All' && document.fileName.toLowerCase().includes(this.state.documentSearch.toLowerCase())){
+                    return (<Document key={document.id} fileId={document.id} documentNo={index + 1} fileName={document.fileName} fileType={document.type} fileSize={document.size} dateUploaded={document.dateUploaded} deleteFile={this.deleteFile} fetchUserFiles={this.fetchUserFiles}/>)
                   }else if(this.state.documentFilter === document.file_type && document.file_name.toLowerCase().includes(this.state.documentSearch.toLowerCase())){
-                    return (<Document key={document.file_id} fileId={document.file_id} documentNo={index + 1} fileName={document.file_name} fileType={document.file_type} fileSize={document.file_size} dateUploaded={document.date_uploaded} deleteFile={this.deleteFile} fetchUserFiles={this.fetchUserFiles}/>)
+                    return (<Document key={document.id} fileId={document.id} documentNo={index + 1} fileName={document.fileName} fileType={document.fileType} fileSize={document.size} dateUploaded={document.dateUploaded} deleteFile={this.deleteFile} fetchUserFiles={this.fetchUserFiles}/>)
                   }
                 })}
               </tbody>

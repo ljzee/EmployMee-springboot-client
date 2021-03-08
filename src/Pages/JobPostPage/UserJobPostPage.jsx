@@ -84,7 +84,12 @@ class UserJobPostPage extends React.Component{
                       <Dropdown.Item onClick={()=>{this.toggleShowApplyModal()}}>Apply</Dropdown.Item>
                       <Dropdown.Item onClick={()=>{
                         userService.toggleBookmark(this.props.location.state.id)
-                                   .then(this.fetchJobPost())
+                                   .then(() => {
+                                     this.setState((prevState) => ({
+                                       bookmarked: !prevState.bookmarked
+                                     }));
+                                    }
+                                   )
                                    .catch(() => {
                                     alert("Unable to toggle bookmark. Please try again.");
                                    });

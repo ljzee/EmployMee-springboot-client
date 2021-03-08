@@ -21,9 +21,9 @@ function uploadFile(file, fileType, fileRename){
 
   const data = new FormData();
   data.append('file', file);
-  data.append('fileType', fileType);
-  data.append('fileRename', fileRename);
-  return axios.post(`${config.apiUrl}/files`, data, configOptions)
+  data.append('type', fileType);
+  data.append('name', fileRename);
+  return axios.post(`${config.apiUrl}/document`, data, configOptions)
               .catch((error) => Promise.reject(error))
 }
 
