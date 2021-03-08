@@ -134,7 +134,7 @@ class DocumentsPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          documentFilter: "All",
+          documentFilter: "ALL",
           documentSearch: "",
           showFileUploadModal: false,
           documents: [],
@@ -265,9 +265,9 @@ class DocumentsPage extends React.Component {
               </thead>
               <tbody>
                 {this.state.documents.map((document, index)=>{
-                  if(this.state.documentFilter === 'All' && document.fileName.toLowerCase().includes(this.state.documentSearch.toLowerCase())){
+                  if(this.state.documentFilter === 'ALL' && document.fileName.toLowerCase().includes(this.state.documentSearch.toLowerCase())){
                     return (<Document key={document.id} fileId={document.id} documentNo={index + 1} fileName={document.fileName} fileType={document.type} fileSize={document.size} dateUploaded={document.dateUploaded} deleteFile={this.deleteFile} fetchUserFiles={this.fetchUserFiles}/>)
-                  }else if(this.state.documentFilter === document.file_type && document.file_name.toLowerCase().includes(this.state.documentSearch.toLowerCase())){
+                  }else if(this.state.documentFilter === document.type && document.fileName.toLowerCase().includes(this.state.documentSearch.toLowerCase())){
                     return (<Document key={document.id} fileId={document.id} documentNo={index + 1} fileName={document.fileName} fileType={document.fileType} fileSize={document.size} dateUploaded={document.dateUploaded} deleteFile={this.deleteFile} fetchUserFiles={this.fetchUserFiles}/>)
                   }
                 })}
