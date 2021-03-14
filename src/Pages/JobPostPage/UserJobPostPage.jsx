@@ -8,6 +8,7 @@ import JobPost from './JobPost';
 import {userService, fileService} from '@/_services';
 import Select from 'react-select';
 import {JobPostType} from '@/_helpers';
+import {DocumentType} from '@/_helpers';
 
 import './JobPost.css'
 
@@ -138,9 +139,9 @@ class UserJobPostPage extends React.Component{
   }
 
   generateFields(resumeRequired, coverletterRequired, otherRequired, files){
-      let resumeOptions = files.filter(file => (file.file_type === 'Resume')).map(file => ({label: file.file_name, value: file.file_id}))
-      let coverletterOptions = files.filter(file => (file.file_type === 'Cover Letter')).map(file => ({label: file.file_name, value: file.file_id}))
-      let otherOptions = files.filter(file => (file.file_type === 'Others')).map(file => ({label: file.file_name, value: file.file_id}))
+      let resumeOptions = files.filter(file => (file.type === DocumentType.Resume)).map(file => ({label: file.fileName, value: file.id}))
+      let coverletterOptions = files.filter(file => (file.type === DocumentType.Coverletter)).map(file => ({label: file.fileName, value: file.id}))
+      let otherOptions = files.filter(file => (file.type === DocumentType.Other)).map(file => ({label: file.fileName, value: file.id}))
 
       let fields = []
 

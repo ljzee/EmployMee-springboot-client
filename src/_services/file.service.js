@@ -31,7 +31,7 @@ function editFile(fileId, fileRename){
   const configOptions = {
       headers: authHeader()
   };
-  return axios.put(`${config.apiUrl}/files/${fileId}`, {fileRename: fileRename}, configOptions)
+  return axios.put(`${config.apiUrl}/document/${fileId}`, {name: fileRename}, configOptions)
               .catch((error) => Promise.reject(error))
 }
 
@@ -60,7 +60,7 @@ function downloadFile(fileId){
       headers: authHeader(),
       responseType: 'blob'
   };
-  return axios.get(`${config.apiUrl}/files/${fileId}`, configOptions)
+  return axios.get(`${config.apiUrl}/document/${fileId}`, configOptions)
           .then(res=>(res))
           .catch((error) => Promise.reject(error));
 }

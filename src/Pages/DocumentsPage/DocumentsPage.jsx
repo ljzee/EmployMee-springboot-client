@@ -71,7 +71,7 @@ class Document extends React.Component {
       <tr>
         <td>{this.props.documentNo}</td>
           {this.state.editFile
-            ? <td className="document-name document-name-input"><FormControl name="fileName" type="text" value={this.state.fileName} onChange={this.handleChange}/></td>
+            ? <td className="document-name document-name-input"><FormControl name="fileName" type="text" value={this.state.fileName.replace(/\.[^/.]+$/, "")} onChange={this.handleChange}/></td>
             : <td className="document-name" ><Button variant="link" className="document-download-button" onClick={()=>{
                 fileService.downloadFile(this.props.fileId)
                            .then((res) => {
