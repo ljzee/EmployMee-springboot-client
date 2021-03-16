@@ -26,7 +26,7 @@ class ApplicantCard extends React.Component{
         <div className="candidate-card-upper">
           <span className="candidate-card-upper-helper">
           </span>
-          <img style={{border: `5px solid  ${color}`}} src={profileImage === '' ? profileicon : profileImage}/>
+          <img style={{border: `5px solid  ${color}`}} src={profileImage ? profileImage : profileicon}/>
         </div>
         <div className="candidate-card-name"><span>{`${firstName} ${lastName}`}</span></div>
         <div className="candidate-card-contact">

@@ -129,7 +129,7 @@ function getJobApplicants(jobPostId){
   };
   return axios.get(`${config.apiUrl}/business/jobpost/${jobPostId}/applicants`, configOptions)
               .then(result => result.data)
-              .catch((error) => Promise.reject(error.response.data.errors));
+              .catch((error) => Promise.reject(error.response.data));
 }
 
 function getApplicantFiles(jobPostId, applicantId){
