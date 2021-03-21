@@ -33,7 +33,7 @@ class ProfilePage extends React.Component {
           githubLink: '',
           experiences: [],
           education: [],
-          profileImageName: '',
+          profileImage: '',
           previewProfileImage: '',
           isLoading: true,
           profileOwnerId: (this.props.location.state ? this.props.location.state.id : authenticationService.currentUserValue.id)
@@ -53,15 +53,15 @@ class ProfilePage extends React.Component {
       .then(profile =>{
         this.setState(prevState => ({
           ...prevState,
-          firstName: profile.first_name,
-          lastName: profile.last_name,
+          firstName: profile.firstName,
+          lastName: profile.lastName,
           aboutMe: profile.bio,
           email: profile.email,
-          phoneNumber: profile.phone_number,
-          personalWebsite: profile.personal_website,
-          githubLink: profile.github_link,
+          phoneNumber: profile.phoneNumber,
+          personalWebsite: profile.personalWebsite,
+          githubLink: profile.githubLink,
           experiences: profile.experiences,
-          profileImageName: profile.profile_image_name,
+          profileImage: profile.profileImage,
           isLoading:false,
           previewProfileImage: ''
         }))
@@ -180,8 +180,8 @@ class ProfilePage extends React.Component {
                       data={{userId: authenticationService.currentUserValue.id, profileOwnerId: this.state.profileOwnerId}}
                       yes={()=>(<div className="welcome-message">Welcome back, {this.state.firstName}!</div>)}
                     />
-                    {this.state.profileImageName && <Card.Img className="profile-image" variant="top" src={(this.state.previewProfileImage === '' ? this.state.profileImageName : this.state.previewProfileImage)}/>}
-                    {!this.state.profileImageName && <Card.Img className="profile-image" variant="top" src={(this.state.previewProfileImage === '' ? profileicon : this.state.previewProfileImage)}/>}
+                    {this.state.profileImage && <Card.Img className="profile-image" variant="top" src={(this.state.previewProfileImage === '' ? this.state.profileImage : this.state.previewProfileImage)}/>}
+                    {!this.state.profileImage && <Card.Img className="profile-image" variant="top" src={(this.state.previewProfileImage === '' ? profileicon : this.state.previewProfileImage)}/>}
 
                     <Can
                       role={authenticationService.currentUserValue.role}
@@ -284,7 +284,9 @@ class ProfilePage extends React.Component {
                                        this.toggleEditAboutMe();
                                        this.fetchProfile();
                                      })
-                                     .catch(error=>console.log(error))
+                                     .catch(error=>{
+                                       alert("Unable to update profile. Please try again.")
+                                     });
                         }
                         }>Save</Button>
                       </Card.Body>
@@ -302,14 +304,14 @@ class ProfilePage extends React.Component {
                     />
                   </Card.Header>
                   <ListGroup className="list-group-flush">
-                    {this.state.experiences.map((experience) => <ExperienceCard key={experience.experience_id}
-                                                                                experience_id={experience.experience_id}
-                                                                                company={experience.company_name}
+                    {this.state.experiences.map((experience) => <ExperienceCard key={experience.id}
+                                                                                experience_id={experience.id}
+                                                                                company={experience.companyName}
                                                                                 title={experience.title}
                                                                                 location={experience.location}
                                                                                 description={experience.description}
-                                                                                startDate={experience.start_date}
-                                                                                endDate={experience.end_date}
+                                                                                startDate={experience.startDate}
+                                                                                endDate={experience.endDate}
                                                                                 fetchProfile={this.fetchProfile}
                                                                                 profileOwnerId={this.state.profileOwnerId}/>)}
                   </ListGroup>
@@ -413,7 +415,7 @@ class ProfilePage extends React.Component {
                 <Modal.Body>
                 <Formik
                     initialValues={{
-                      company: '',
+                      companyName: '',
                       title: '',
                       location: '',
                       description: '',
@@ -421,28 +423,49 @@ class ProfilePage extends React.Component {
                       endDate: ''
                     }}
                     validationSchema={Yup.object().shape({
-                        company: Yup.string().required('Company is required'),
+                        companyName: Yup.string().required('Company is required'),
                         title: Yup.string().required('Title is required'),
                         location: Yup.string().required('Location is required'),
                         description: Yup.string(),
                         startDate: Yup.string().required('Start date is required'),
                         endDate: Yup.string()
                     })}
-                    onSubmit={({company, title, location, description, startDate, endDate}, { setStatus, setSubmitting }) => {
-                      userService.addExperience(company, title, location, startDate, endDate, description).then(()=>{
+                    onSubmit={({companyName, title, location, description, startDate, endDate}, { setStatus, setFieldError, setSubmitting }) => {
+                      userService.addExperience(companyName, title, location, startDate, endDate, description).then(()=>{
                         this.fetchProfile();
                         this.toggleShowModal();
-                      }).catch(error =>{
-                        setSubmitting(false);
-                        setStatus(error);
+                      }).catch(error => {
+                            setSubmitting(false);
+                            error.generalErrors = error.subErrors.filter(error => (!error.hasOwnProperty("field")));
+                            setStatus(error);
+                            if(error.subErrors) {
+                              error.subErrors.forEach(subError => {
+                                if(subError.field && subError.message) {
+                                  setFieldError(subError.field, subError.message);
+                                }
+                              });
+                            }
                       });
                     }}
-                    render={({ values, errors, status, touched, isSubmitting, setFieldValue, setFieldTouched }) => (
-                        <FForm>
+                    render={({ values, errors, status, touched, isSubmitting, setFieldValue, setFieldTouched }) => {
+                      let statusContents;
+                      if(status) {
+                        const hasGeneralErrors = status.generalErrors.length > 0;
+                        statusContents = <div className={'alert alert-danger'}>
+                                          {status.message}
+                                          {hasGeneralErrors &&
+                                          <ul>
+                                            {status.generalErrors.map(error => (<li>{error.message}</li>))}
+                                          </ul>}
+                                        </div>;
+                      }
+
+                        return <FForm>
+                          {statusContents}
                             <div className="form-group">
-                                <label htmlFor="company"><b>Company:</b></label>
-                                <Field name="company" type="text" className={'form-control' + (errors.company && touched.company ? ' is-invalid' : '')} />
-                                <ErrorMessage name="company" component="div" className="invalid-feedback" />
+                                <label htmlFor="companyName"><b>Company:</b></label>
+                                <Field name="companyName" type="text" className={'form-control' + (errors.companyName && touched.companyName ? ' is-invalid' : '')} />
+                                <ErrorMessage name="companyName" component="div" className="invalid-feedback" />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="title"><b>Title:</b></label>
@@ -492,11 +515,8 @@ class ProfilePage extends React.Component {
                                 Add Experience
                               </Button>
                             </div>
-                            {status &&
-                                <div className={'alert alert-danger'}>{status.map((msg, i) => <li key={i}>{msg}</li>)}</div>
-                            }
                         </FForm>
-                    )}
+                    }}
                 />
                 </Modal.Body>
 

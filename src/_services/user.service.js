@@ -42,15 +42,13 @@ function createProfile(firstName, lastName, phoneNumber, personalWebsite, github
 }
 
 function getProfile(userId){
-  /*
-  const user = authenticationService.currentUserValue;
   const configOptions = {
       headers: authHeader()
   };
-  */
-  return axios.get(`${config.apiUrl}/users/profile/${userId}`, {})
+
+  return axios.get(`${config.apiUrl}/user/profile/${userId}`, configOptions)
               .then(result => result.data)
-              .catch((error) => Promise.reject(error.response.data.errors))
+              .catch((error) => Promise.reject(error.response.data))
 
 }
 
@@ -64,22 +62,21 @@ function getDashboard(){
               .catch((error)=>Promise.reject(error.response.data.errors));
 }
 
-function updateProfile(bio, phoneNumber, personalWebsite, github){
-  const user = authenticationService.currentUserValue;
+function updateProfile(bio, phoneNumber, personalWebsite, githubLink){
   const configOptions = {
       headers: authHeader()
   };
-  return axios.put(`${config.apiUrl}/users/profile/${user.id}`, {'bio': bio, 'phoneNumber': phoneNumber, 'personalWebsite': personalWebsite, 'github':github} ,configOptions)
-              .catch((error) => Promise.reject(error.response.data.errors))
+  return axios.put(`${config.apiUrl}/user/profile`, {'bio': bio, 'phoneNumber': phoneNumber, 'personalWebsite': personalWebsite, 'githubLink':githubLink} ,configOptions)
+              .catch((error) => Promise.reject(error.response.data));
 }
 
-function addExperience(company, title, location, startDate, endDate, description){
+function addExperience(companyName, title, location, startDate, endDate, description){
   const configOptions = {
       headers: authHeader()
   };
 
-  return axios.post(`${config.apiUrl}/users/experience`, { 'company': company, 'title': title, 'location': location, 'startDate': startDate, 'endDate': endDate, 'description': description}, configOptions)
-              .catch((error)=>Promise.reject(error.response.data.errors));
+  return axios.post(`${config.apiUrl}/user/experience`, { 'companyName': companyName, 'title': title, 'location': location, 'startDate': startDate, 'endDate': endDate, 'description': description}, configOptions)
+              .catch((error)=>Promise.reject(error.response.data));
 }
 
 function editExperience(experienceId, company, title, location, startDate, endDate, description){
