@@ -14,7 +14,7 @@ export const businessService = {
     updateJobPostStatus,
     deleteJobPost,
     getJobApplicants,
-    getApplicantFiles,
+    getApplicationFiles,
     updateApplicationStatus,
     updateJobPostStatus,
     updateJobPostDeadline,
@@ -78,7 +78,7 @@ function getAllBusinessJobPost(){
   };
   return axios.get(`${config.apiUrl}/business/jobpost`, configOptions)
               .then(result => result.data)
-              .catch((error) => Promise.reject(error.response.data.errors));
+              .catch((error) => Promise.reject(error.response.data));
 }
 
 function getJobPost(jobPostId){
@@ -87,7 +87,7 @@ function getJobPost(jobPostId){
   };
   return axios.get(`${config.apiUrl}/business/jobpost/${jobPostId}`, configOptions)
               .then(result => result.data)
-              .catch((error) => Promise.reject(error.response.data.errors));
+              .catch((error) => Promise.reject(error.response.data));
 }
 
 function updateJobPost(jobPostId, title, duration, positionType, addressId, openings, description, salary, deadline, resumeRequired, coverletterRequired, otherRequired){
@@ -132,22 +132,22 @@ function getJobApplicants(jobPostId){
               .catch((error) => Promise.reject(error.response.data));
 }
 
-function getApplicantFiles(jobPostId, applicantId){
+function getApplicationFiles(jobPostId, applicationId){
   const configOptions = {
       headers: authHeader(),
       responseType: 'blob'
   };
-  return axios.get(`${config.apiUrl}/business/jobpost/${jobPostId}/applicants/${applicantId}`, configOptions)
+  return axios.get(`${config.apiUrl}/application/${applicationId}`, configOptions)
               .then(res=>(res))
               .catch((error) => Promise.reject(error));
 
 }
 
-function updateApplicationStatus(jobPostId, applicantId, status){
+function updateApplicationStatus(applicationId, status){
   const configOptions = {
       headers: authHeader()
   };
-  return axios.post(`${config.apiUrl}/business/jobpost/${jobPostId}/applicants/${applicantId}`, {status: status}, configOptions)
+  return axios.put(`${config.apiUrl}/application/${applicationId}`, {status: status}, configOptions)
               .catch((error) => Promise.reject(error));
 }
 

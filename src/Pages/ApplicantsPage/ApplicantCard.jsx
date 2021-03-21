@@ -12,10 +12,12 @@ class ApplicantCard extends React.Component{
     this.updateApplicationStatus = this.updateApplicationStatus.bind(this);
   }
 
-  updateApplicationStatus(jobId, applicationId, status){
-    businessService.updateApplicationStatus(jobId, applicationId, status)
+  updateApplicationStatus(applicationId, status){
+    businessService.updateApplicationStatus(applicationId, status)
     .then(()=>{this.props.fetchApplicants();})
-    .catch(error=>{console.log(error)})
+    .catch(error=>{
+      alert("Unable to update application status. Please try again.");
+    });
   }
 
   render(){
@@ -35,7 +37,7 @@ class ApplicantCard extends React.Component{
         </div>
         <div className="candidate-card-buttons">
           <Button variant="link" onClick={()=>{
-            businessService.getApplicantFiles(jobId, aId)
+            businessService.getApplicationFiles(jobId, aId)
                             .then((res) => {
                               const url = window.URL.createObjectURL(new Blob([res.data]));
                               const link = document.createElement('a');
@@ -60,13 +62,13 @@ class ApplicantCard extends React.Component{
         { (status === ApplicationStatus.New) &&
           <div className="candidate-card-options">
             <Button variant="success" onClick={()=>{
-              this.updateApplicationStatus(jobId, aId, ApplicationStatus.Accepted);
+              this.updateApplicationStatus(aId, ApplicationStatus.Accepted);
             }}>Accept</Button>
             <Button variant="warning" onClick={()=>{
-              this.updateApplicationStatus(jobId, aId, ApplicationStatus.Saved);
+              this.updateApplicationStatus(aId, ApplicationStatus.Saved);
             }}>Save</Button>
             <Button variant="danger" onClick={()=>{
-              this.updateApplicationStatus(jobId, aId, ApplicationStatus.Rejected);
+              this.updateApplicationStatus(aId, ApplicationStatus.Rejected);
             }}>Reject</Button>
           </div>
         }
