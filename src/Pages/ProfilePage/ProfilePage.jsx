@@ -306,7 +306,7 @@ class ProfilePage extends React.Component {
                   <ListGroup className="list-group-flush">
                     {this.state.experiences.map((experience) => <ExperienceCard key={experience.id}
                                                                                 experience_id={experience.id}
-                                                                                company={experience.companyName}
+                                                                                companyName={experience.companyName}
                                                                                 title={experience.title}
                                                                                 location={experience.location}
                                                                                 description={experience.description}
@@ -460,62 +460,62 @@ class ProfilePage extends React.Component {
                                         </div>;
                       }
 
-                        return <FForm>
-                          {statusContents}
-                            <div className="form-group">
-                                <label htmlFor="companyName"><b>Company:</b></label>
-                                <Field name="companyName" type="text" className={'form-control' + (errors.companyName && touched.companyName ? ' is-invalid' : '')} />
-                                <ErrorMessage name="companyName" component="div" className="invalid-feedback" />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="title"><b>Title:</b></label>
-                                <Field name="title" type="text" className={'form-control' + (errors.title && touched.title ? ' is-invalid' : '')} />
-                                <ErrorMessage name="title" component="div" className="invalid-feedback" />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="location"><b>Location:</b></label>
-                                <Field name="location" type="text" className={'form-control' + (errors.location && touched.location ? ' is-invalid' : '')} />
-                                <ErrorMessage name="location" component="div" className="invalid-feedback" />
-                            </div>
-                            <div className="form-group">
-                                <label className="date-label" htmlFor="startDate"><b>Start Date:</b></label>
-                                <DatePicker name="startDate" value={values.startDate}
-                                  onChange={(date) =>{
-                                    setFieldValue("startDate",date.toISOString().split("T")[0])
-                                  }}
-                                  onBlur={()=>setFieldTouched('startDate', true)}
-                                />
-                                {errors.startDate && touched.startDate && (
-                                  <div
-                                    style={{ color: "#dc3545", marginTop: ".10rem", fontSize:"80%" }}
-                                  >
-                                    {errors.startDate}
-                                  </div>
-                                )}
-                            </div>
-                            <div className="form-group">
-                                <label className="date-label" htmlFor="endDate"><b>End Date:</b></label>
-                                <DatePicker name="endDate" value={values.endDate}
-                                  onChange={(date) =>{
-                                    setFieldValue("endDate",date.toISOString().split("T")[0])
-                                  }}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="description"><b>Description:</b></label>
-                                <Field name="description" rows="5" component="textarea" className={'form-control' + (errors.description && touched.description ? ' is-invalid' : '')} />
-                                <ErrorMessage name="description" component="div" className="invalid-feedback" />
-                            </div>
-                            <br />
-                            <div className="form-group" style={{textAlign: "right"}}>
-                              <Button variant="secondary" className="edit-button" onClick={this.toggleShowModal}>
-                                Close
-                              </Button>
-                              <Button variant="primary" className="edit-button" type="submit">
-                                Add Experience
-                              </Button>
-                            </div>
-                        </FForm>
+                      return <FForm>
+                        {statusContents}
+                          <div className="form-group">
+                              <label htmlFor="companyName"><b>Company:</b></label>
+                              <Field name="companyName" type="text" className={'form-control' + (errors.companyName && touched.companyName ? ' is-invalid' : '')} />
+                              <ErrorMessage name="companyName" component="div" className="invalid-feedback" />
+                          </div>
+                          <div className="form-group">
+                              <label htmlFor="title"><b>Title:</b></label>
+                              <Field name="title" type="text" className={'form-control' + (errors.title && touched.title ? ' is-invalid' : '')} />
+                              <ErrorMessage name="title" component="div" className="invalid-feedback" />
+                          </div>
+                          <div className="form-group">
+                              <label htmlFor="location"><b>Location:</b></label>
+                              <Field name="location" type="text" className={'form-control' + (errors.location && touched.location ? ' is-invalid' : '')} />
+                              <ErrorMessage name="location" component="div" className="invalid-feedback" />
+                          </div>
+                          <div className="form-group">
+                              <label className="date-label" htmlFor="startDate"><b>Start Date:</b></label>
+                              <DatePicker name="startDate" value={values.startDate}
+                                onChange={(date) =>{
+                                  setFieldValue("startDate",date.toISOString().split("T")[0])
+                                }}
+                                onBlur={()=>setFieldTouched('startDate', true)}
+                              />
+                              {errors.startDate && touched.startDate && (
+                                <div
+                                  style={{ color: "#dc3545", marginTop: ".10rem", fontSize:"80%" }}
+                                >
+                                  {errors.startDate}
+                                </div>
+                              )}
+                          </div>
+                          <div className="form-group">
+                              <label className="date-label" htmlFor="endDate"><b>End Date:</b></label>
+                              <DatePicker name="endDate" value={values.endDate}
+                                onChange={(date) =>{
+                                  setFieldValue("endDate",date.toISOString().split("T")[0])
+                                }}
+                              />
+                          </div>
+                          <div className="form-group">
+                              <label htmlFor="description"><b>Description:</b></label>
+                              <Field name="description" rows="5" component="textarea" className={'form-control' + (errors.description && touched.description ? ' is-invalid' : '')} />
+                              <ErrorMessage name="description" component="div" className="invalid-feedback" />
+                          </div>
+                          <br />
+                          <div className="form-group" style={{textAlign: "right"}}>
+                            <Button variant="secondary" className="edit-button" onClick={this.toggleShowModal}>
+                              Close
+                            </Button>
+                            <Button variant="primary" className="edit-button" type="submit">
+                              Add Experience
+                            </Button>
+                          </div>
+                      </FForm>
                     }}
                 />
                 </Modal.Body>

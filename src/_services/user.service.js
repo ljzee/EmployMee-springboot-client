@@ -79,13 +79,13 @@ function addExperience(companyName, title, location, startDate, endDate, descrip
               .catch((error)=>Promise.reject(error.response.data));
 }
 
-function editExperience(experienceId, company, title, location, startDate, endDate, description){
+function editExperience(experienceId, companyName, title, location, startDate, endDate, description){
   const configOptions = {
       headers: authHeader()
   };
 
-  return axios.put(`${config.apiUrl}/users/experience/${experienceId}`, { 'company': company, 'title': title, 'location': location, 'startDate': startDate, 'endDate': endDate, 'description': description}, configOptions)
-              .catch((error)=>Promise.reject(error.response.data.errors));
+  return axios.put(`${config.apiUrl}/user/experience/${experienceId}`, { 'companyName': companyName, 'title': title, 'location': location, 'startDate': startDate, 'endDate': endDate, 'description': description}, configOptions)
+              .catch((error)=>Promise.reject(error.response.data));
 }
 
 function deleteExperience(id){
