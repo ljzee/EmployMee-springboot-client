@@ -58,9 +58,12 @@ function createProfile(companyName, country, state, city, streetAddress, postalC
 }
 
 function getProfile(userId){
-  return axios.get(`${config.apiUrl}/business/profile/${userId}`, {})
+  const configOptions = {
+      headers: authHeader()
+  };
+  return axios.get(`${config.apiUrl}/business/profile/${userId}`, configOptions)
               .then(result => result.data)
-              .catch((error) => Promise.reject(error.response.data.errors));
+              .catch((error) => Promise.reject(error.response.data));
 
 }
 
@@ -165,8 +168,8 @@ function updateProfile(phoneNumber, website, description){
       headers: authHeader()
   };
 
-  return axios.put(`${config.apiUrl}/business/profile/${user.id}`, {phoneNumber: phoneNumber, website: website, description: description}, configOptions)
-              .catch((error)=>Promise.reject(error.response.data.errors));
+  return axios.put(`${config.apiUrl}/business/profile`, {phoneNumber: phoneNumber, website: website, description: description}, configOptions)
+              .catch((error)=>Promise.reject(error.response.data));
 }
 
 function addUpdate(content){

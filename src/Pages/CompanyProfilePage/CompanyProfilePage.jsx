@@ -78,13 +78,13 @@ class CompanyProfilePage extends React.Component{
                    .then((data)=>{
                      this.setState({
                        isLoading: false,
-                       companyName: data.company_name,
+                       companyName: data.companyName,
                        aboutUs: data.description,
-                       profileImage: data.profile_image,
+                       profileImage: data.profileImage,
                        website: data.website,
-                       phoneNumber: data.phone_number,
+                       phoneNumber: data.phoneNumber,
                        addresses: data.addresses,
-                       jobs: data.jobs,
+                       jobs: data.jobPosts,
                        updates: data.updates,
                        previewProfileImage: '',
                        editAboutUs: false,
@@ -138,7 +138,7 @@ class CompanyProfilePage extends React.Component{
             yes={()=>(
               <div className="business-profile-page-title">
                 <h3>{this.state.companyName}</h3>
-                {this.state.addresses[0] && <div className="business-profile-page-title-address">{`${this.state.addresses[0].street_name_no}, ${this.state.addresses[0].city}, ${this.state.addresses[0].state}, ${this.state.addresses[0].country}`}</div>}
+                {this.state.addresses[0] && <div className="business-profile-page-title-address">{`${this.state.addresses[0].streetNameNo}, ${this.state.addresses[0].city}, ${this.state.addresses[0].state}, ${this.state.addresses[0].country}`}</div>}
               </div>
             )}
           />
@@ -149,7 +149,7 @@ class CompanyProfilePage extends React.Component{
             yes={()=>(
               <div className="business-profile-page-title">
                 <h3>{this.state.companyName}</h3>
-                {this.state.addresses[0] && <div className="business-profile-page-title-address">{`${this.state.addresses[0].street_name_no}, ${this.state.addresses[0].city}, ${this.state.addresses[0].state}, ${this.state.addresses[0].country}`}</div>}
+                {this.state.addresses[0] && <div className="business-profile-page-title-address">{`${this.state.addresses[0].streetNameNo}, ${this.state.addresses[0].city}, ${this.state.addresses[0].state}, ${this.state.addresses[0].country}`}</div>}
               </div>
             )}
           />
@@ -248,7 +248,9 @@ class CompanyProfilePage extends React.Component{
                   <Button variant="primary" className="edit-button float-right" onClick={()=>{
                     businessService.updateProfile(this.state.phoneNumber, this.state.website, this.state.aboutUs)
                                    .then(()=>{this.fetchProfile();})
-                                   .catch(error => {console.log(error)})
+                                   .catch(error => {
+                                     alert("Unable to update profile. Please try again.");
+                                   });
                   }
                   }>Save</Button>
                 </Card.Body>
@@ -338,7 +340,7 @@ class CompanyProfilePage extends React.Component{
                   this.props.history.push(`/${route}/${formattedJobTitle}`, {id: job.id, edit: false});
                 }} className="business-profile-job-container-job">
                   <div className="job-title">{job.title}</div>
-                  <div className="job-location">{`${job.city}, ${job.state}`}</div>
+                  <div className="job-location">{`${job.jobAddresses[0].city}, ${job.jobAddresses[0].state}`}</div>
                 </a>
               ))}
             </div>
@@ -375,7 +377,9 @@ class CompanyProfilePage extends React.Component{
                 <Button variant="primary" className="edit-button float-right" onClick={()=>{
                   businessService.updateProfile(this.state.phoneNumber, this.state.website, this.state.aboutUs)
                                  .then(()=>{this.fetchProfile();})
-                                 .catch(error => {console.log(error)})
+                                 .catch(error => {
+                                   alert("Unable to update profile. Please try again.");
+                                 });
                 }}>Save</Button>
               </Card.Body>
             }
