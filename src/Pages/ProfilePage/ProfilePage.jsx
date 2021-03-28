@@ -436,7 +436,9 @@ class ProfilePage extends React.Component {
                         this.toggleShowModal();
                       }).catch(error => {
                             setSubmitting(false);
-                            error.generalErrors = error.subErrors.filter(error => (!error.hasOwnProperty("field")));
+                            if(error.subErrors) {
+                              error.generalErrors = error.subErrors.filter(error => (!error.hasOwnProperty("field")));
+                            }
                             setStatus(error);
                             if(error.subErrors) {
                               error.subErrors.forEach(subError => {
@@ -444,12 +446,14 @@ class ProfilePage extends React.Component {
                                   setFieldError(subError.field, subError.message);
                                 }
                               });
+                            } else {
+                              alert("Unable to add experience. Please try again.");
                             }
                       });
                     }}
                     render={({ values, errors, status, touched, isSubmitting, setFieldValue, setFieldTouched }) => {
                       let statusContents;
-                      if(status) {
+                      if(status && status.generalErrors) {
                         const hasGeneralErrors = status.generalErrors.length > 0;
                         statusContents = <div className={'alert alert-danger'}>
                                           {status.message}
