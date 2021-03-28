@@ -135,9 +135,9 @@ function getAllUserApplications(){
   const configOptions = {
       headers: authHeader()
   };
-  return axios.get(`${config.apiUrl}/application`, configOptions)
+  return axios.get(`${config.apiUrl}/user/application`, configOptions)
               .then(result => result.data)
-              .catch((error)=>Promise.reject(error.response.data.errors));
+              .catch((error)=>Promise.reject(error.response.data));
 }
 
 function toggleBookmark(jobPostId){

@@ -21,52 +21,17 @@ class ApplicationsPage extends React.Component{
 
     userService.getAllUserApplications()
                .then(data=>{
-
                  this.setState({
                    loading: false,
                    applications: data
                  })
                })
-               .catch(error=>{console.log(error)})
+               .catch(error=>{
+                 alert("Unable to get applications. Please try again.")
+               });
   }
 
   render(){
-
-    const data = [
-      {
-        position: 'Intermediate UX/UI Designer',
-        company: 'Microsoft',
-        dateSubmitted: '2019-07-04',
-        dateProcessed: '2019-08-01',
-        status: 'ACCEPTED',
-        id: 14
-      },
-      {
-        position: 'Intermediate UX/UI Designer',
-        company: 'Microsoft',
-        dateSubmitted: '2019-07-04',
-        dateProcessed: '2019-08-01',
-        status: 'SAVED',
-        id: 14
-      },
-      {
-        position: 'Intermediate UX/UI Designer',
-        company: 'Microsoft',
-        dateSubmitted: '2019-07-04',
-        dateProcessed: '2019-08-01',
-        status: 'REJECTED',
-        id: 14
-      },
-      {
-        position: 'Intermediate UX/UI Designer',
-        company: 'Microsoft',
-        dateSubmitted: '2019-07-04',
-        dateProcessed: null,
-        status: 'NEW',
-        id: 14
-      },
-    ]
-
     const columns = [{
       Header: '#',
       width: 40,
@@ -83,7 +48,7 @@ class ApplicationsPage extends React.Component{
       Cell: props => {
         let formattedJobTitle = props.original.title.replace(/\s+/g, '-').replace(/\//, '-').toLowerCase();
         return(
-          <Link style={{color: "#007bff"}} to={{pathname: `/searchjobs/${formattedJobTitle}`, state: {id: props.original.j_id}}}>{props.original.title}</Link>
+          <Link style={{color: "#007bff"}} to={{pathname: `/searchjobs/${formattedJobTitle}`, state: {id: props.original.jobPostId}}}>{props.original.title}</Link>
         )
       },
       style:{
@@ -91,12 +56,12 @@ class ApplicationsPage extends React.Component{
       }
     },{
       Header: 'Company',
-      accessor: 'company_name',
+      accessor: 'companyName',
       width: 200,
       Cell: props => {
         let formattedJobTitle = props.original.title.replace(/\s+/g, '-').replace(/\//, '-').toLowerCase();
         return(
-          <Link style={{color: "#007bff"}} to={{pathname: `/searchjobs/${formattedJobTitle}/${props.original.company_name}`, state: {id: props.original.b_id}}}>{props.original.company_name}</Link>
+          <Link style={{color: "#007bff"}} to={{pathname: `/searchjobs/${formattedJobTitle}/${props.original.companyName}`, state: {id: props.original.companyId}}}>{props.original.companyName}</Link>
         )
       },
       style:{
@@ -108,14 +73,13 @@ class ApplicationsPage extends React.Component{
       style:{
           textAlign: "center"
       },
-      accessor: 'date_submitted',
+      accessor: 'dateSubmitted',
     },{
       Header: 'Date Processed',
-      accessor: 'date_processed',
+      accessor: 'dateProcessed',
       width: 130,
       Cell: props => {
-
-        return (props.original.date_processed ? props.original.date_processed : 'N/A')
+        return (props.original.dateProcessed ? props.original.dateProcessed : 'N/A')
       },
       style:{
           textAlign: "center"
