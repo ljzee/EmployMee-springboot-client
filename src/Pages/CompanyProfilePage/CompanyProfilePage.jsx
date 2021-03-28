@@ -276,11 +276,25 @@ class CompanyProfilePage extends React.Component{
                     validationSchema={Yup.object().shape({
                       content: Yup.string().required('You must write something...'),
                     })}
-                    onSubmit={({content},{setStatus, setSubmitting, resetForm})=>{
+                    onSubmit={({content},{setStatus, setSubmitting, resetForm, setFieldError})=>{
                       setStatus();
                       businessService.addUpdate(content)
-                                     .then(()=>{resetForm();this.fetchProfile()})
-                                     .catch(error => {console.log(error)})
+                                     .then(()=>{
+                                       resetForm();
+                                       this.fetchProfile()})
+                                     .catch(error => {
+                                           setSubmitting(false);
+                                           setStatus(error);
+                                           if(error.subErrors) {
+                                             error.subErrors.forEach(subError => {
+                                               if(subError.field && subError.message) {
+                                                 setFieldError(subError.field, subError.message);
+                                               }
+                                             });
+                                           } else {
+                                             alert("Unable to add update. Please try again.");
+                                           }
+                                     });
                     }}
                     render={({errors, status,touched, isSubmitting})=>(
                       <FForm>
@@ -296,8 +310,10 @@ class CompanyProfilePage extends React.Component{
               )}
             />
             <ListGroup className="list-group-flush">
-              {this.state.updates.map(update => (
-                <ListGroup.Item className="company-update" key={update.update_id}>
+              {this.state.updates.map(update => {
+                let datePosted = new Date(update.datePosted);
+
+                return <ListGroup.Item className="company-update" key={update.id}>
                   <div>
                     <Can
                       role={authenticationService.currentUserValue.role}
@@ -305,18 +321,21 @@ class CompanyProfilePage extends React.Component{
                       data={{userId: authenticationService.currentUserValue.id, profileOwnerId: this.state.profileOwnerId}}
                       yes={()=>(
                         <Button variant="link" className="float-right" onClick={()=>{
-                          businessService.deleteUpdate(update.update_id)
+                          businessService.deleteUpdate(update.id)
                                          .then(()=>{this.fetchProfile()})
+                                         .catch((error) => {
+                                           alert("Unable to delete update. Please try again.");
+                                         });
                         }}>Delete</Button>
                       )}
                     />
-                    <div className="company-update-header"><img src={(this.state.profileImage ? this.state.profileImage : profileicon)} /><span className="company-update-date">{update.date_posted}</span></div>
+                    <div className="company-update-header"><img src={(this.state.profileImage ? this.state.profileImage : profileicon)} /><span className="company-update-date">{datePosted.toLocaleString()}</span></div>
                     <div className="company-update-content">
                     {update.content}
                     </div>
                   </div>
                 </ListGroup.Item>
-              ))}
+              })}
             </ListGroup>
           </Card>
 

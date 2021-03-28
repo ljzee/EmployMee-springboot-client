@@ -176,16 +176,16 @@ function addUpdate(content){
   const configOptions = {
       headers: authHeader()
   };
-  return axios.post(`${config.apiUrl}/business/updates`, {content: content}, configOptions)
-              .catch((error)=>Promise.reject(error.response.data.errors));
+  return axios.post(`${config.apiUrl}/business/update`, {content: content}, configOptions)
+              .catch((error)=>Promise.reject(error.response.data));
 }
 
 function deleteUpdate(updateId){
   const configOptions = {
       headers: authHeader()
   };
-  return axios.delete(`${config.apiUrl}/business/updates/${updateId}`,configOptions)
-              .catch((error)=>Promise.reject(error.response.data.errors));
+  return axios.delete(`${config.apiUrl}/business/update/${updateId}`,configOptions)
+              .catch((error)=>Promise.reject(error.response.data));
 }
 
 
