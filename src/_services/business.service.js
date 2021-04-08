@@ -158,8 +158,8 @@ function uploadProfileImage(encodedString){
   const configOptions = {
       headers: authHeader()
   };
-  return axios.post(`${config.apiUrl}/business/profile/profile-image`, {encodedString: encodedString}, configOptions)
-              .catch((error)=>Promise.reject(error.response.data.errors));
+  return axios.post(`${config.apiUrl}/business/profile-image`, {encodedString: encodedString}, configOptions)
+              .catch((error)=>Promise.reject(error.response.data));
 }
 
 function updateProfile(phoneNumber, website, description){

@@ -268,7 +268,7 @@ class DocumentsPage extends React.Component {
                   if(this.state.documentFilter === 'ALL' && document.fileName.toLowerCase().includes(this.state.documentSearch.toLowerCase())){
                     return (<Document key={document.id} fileId={document.id} documentNo={index + 1} fileName={document.fileName} fileType={document.type} fileSize={document.size} dateUploaded={document.dateUploaded} deleteFile={this.deleteFile} fetchUserFiles={this.fetchUserFiles}/>)
                   }else if(this.state.documentFilter === document.type && document.fileName.toLowerCase().includes(this.state.documentSearch.toLowerCase())){
-                    return (<Document key={document.id} fileId={document.id} documentNo={index + 1} fileName={document.fileName} fileType={document.fileType} fileSize={document.size} dateUploaded={document.dateUploaded} deleteFile={this.deleteFile} fetchUserFiles={this.fetchUserFiles}/>)
+                    return (<Document key={document.id} fileId={document.id} documentNo={index + 1} fileName={document.fileName} fileType={document.type} fileSize={document.size} dateUploaded={document.dateUploaded} deleteFile={this.deleteFile} fetchUserFiles={this.fetchUserFiles}/>)
                   }
                 })}
               </tbody>

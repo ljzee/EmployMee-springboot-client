@@ -59,7 +59,7 @@ function getDashboard(){
 
   return axios.get(`${config.apiUrl}/user/dashboard`, configOptions)
               .then(result => result.data)
-              .catch((error)=>Promise.reject(error.response.data.errors));
+              .catch((error)=>Promise.reject(error.response.data));
 }
 
 function updateProfile(bio, phoneNumber, personalWebsite, githubLink){
@@ -93,15 +93,15 @@ function deleteExperience(id){
       headers: authHeader()
   };
   return axios.delete(`${config.apiUrl}/users/experience/${id}`, configOptions)
-              .catch((error)=>Promise.reject(error.response.data.errors));
+              .catch((error)=>Promise.reject(error.response.data));
 }
 
 function uploadProfileImage(encodedString){
   const configOptions = {
       headers: authHeader()
   };
-  return axios.post(`${config.apiUrl}/users/profile/profile-image`, {encodedString: encodedString}, configOptions)
-              .catch((error)=>Promise.reject(error.response.data.errors));
+  return axios.post(`${config.apiUrl}/user/profile-image`, {encodedString: encodedString}, configOptions)
+              .catch((error)=>Promise.reject(error.response.data));
 }
 
 function getJobPost(jobPostId){
@@ -110,7 +110,7 @@ function getJobPost(jobPostId){
   };
   return axios.get(`${config.apiUrl}/jobpost/${jobPostId}`, configOptions)
               .then(result => result.data)
-              .catch((error)=>Promise.reject(error.response.data.errors));
+              .catch((error)=>Promise.reject(error.response.data));
 }
 
 function searchJobPost(searchField, country, state, city){
@@ -128,7 +128,7 @@ function submitApplication(jobPostId, documents){
   };
   return axios.post(`${config.apiUrl}/application`, {jobPostId: jobPostId, documentIds: documents}, configOptions)
               .then(result => result.data)
-              .catch((error)=>Promise.reject(error.response.data.errors));
+              .catch((error)=>Promise.reject(error.response.data));
 }
 
 function getAllUserApplications(){

@@ -206,6 +206,9 @@ class ProfilePage extends React.Component {
                             <Button variant="link" className="image-picker" onClick={() => {
                               userService.uploadProfileImage(this.state.previewProfileImage)
                                          .then(()=>{this.fetchProfile()})
+                                         .catch((error) => {
+                                           alert("Unable to upload profile image. Please try again.")
+                                         });
                             }}>
                               Upload
                             </Button>
