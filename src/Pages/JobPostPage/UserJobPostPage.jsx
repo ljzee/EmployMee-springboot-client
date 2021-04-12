@@ -188,7 +188,7 @@ class UserJobPostPage extends React.Component{
       </div>
     )
 
-    const backButton = ()=>(<Link className="jobpostpage-backlink" to="/searchjobs">Back to job search</Link>)
+    const backButton = ()=>(<a href="javascript:void(0)" className="jobpostpage-backlink" onClick={this.props.history.goBack}>Back to job search</a>)
 
     return(
       <React.Fragment>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import Select from 'react-select';
 import {Form, Button, ListGroup, Card, Pagination} from 'react-bootstrap';
 import './JobSearch.css'
@@ -46,19 +46,23 @@ const quantityOptions = [5, 10, 20, 30];
 class JobSearchPage extends React.Component{
   constructor(props){
     super(props);
+
+    const searchParams = new URLSearchParams(this.props.location.search);
+
     this.state = {
       quantity: 5,
       paginateObject: null,
-      country: '',
-      region: '',
-      city: '',
-      search: '',
+      country: searchParams.has("country") ? searchParams.get("country") : '',
+      state: searchParams.has("state") ? searchParams.get("state") : '',
+      city: searchParams.has("city") ? searchParams.get("city") : '',
+      search: searchParams.has("search") ? searchParams.get("search") : '',
       prevSearch: '',
       jobPosts: []
     }
     this.setQuantityOptions = this.setQuantityOptions.bind(this);
     this.setLocationFieldValue = this.setLocationFieldValue.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeAndSetQueryParams = this.handleChangeAndSetQueryParams.bind(this);
     this.submitSearch = this.submitSearch.bind(this);
     this.handlePaginationChange = this.handlePaginationChange.bind(this);
   }
@@ -102,8 +106,20 @@ class JobSearchPage extends React.Component{
     })
   }
 
+  handleChangeAndSetQueryParams(e) {
+    this.handleChange(e);
+    const params = new URLSearchParams(this.props.location.search);
+
+    if(e.target.value) {
+      params.set(e.target.name, e.target.value);
+    } else {
+      params.delete(e.target.name);
+    }
+    this.props.history.push({search: params.toString()})
+  }
+
   submitSearch(){
-    userService.searchJobPost(this.state.search, this.state.country, this.state.region, this.state.city)
+    userService.searchJobPost(this.state.search, this.state.country, this.state.state, this.state.city)
                .then(data => {
                  this.setState((prevState) => {
                   let paginateResult = paginate(data.length, 1, prevState.quantity);
@@ -154,19 +170,19 @@ class JobSearchPage extends React.Component{
         <Form className="job-search-page-search-container">
           <Form.Group>
             <Button variant="primary" onClick={this.submitSearch}>Search Jobs</Button>
-            <Form.Control name="search" onChange={this.handleChange} type="text" placeholder="Search job title or company" />
+            <Form.Control name="search" onChange={this.handleChangeAndSetQueryParams} type="text" placeholder="Search job title or company" value={this.state.search}/>
 
-            <LocationPicker setFieldValue={this.setLocationFieldValue}>
+            <LocationPicker setFieldValue={this.setLocationFieldValue} country={this.state.country} state={this.state.state} city={this.state.city} location={this.props.location} history={this.props.history}>
             {({countryOptions, stateOptions, cityOptions, country, state, city, handleChange}) => (
               <div className="location-selector-container">
                 <div className="select-wrapper">
-                  <Select name="country" options={countryOptions} value={country} onChange={handleChange} placeholder="Country" styles={styles}/>
+                  <Select name="country" options={countryOptions} value={country} onChange={handleChange} placeholder="Country" styles={styles} />
                 </div>
                 <div className="select-wrapper">
-                  <Select name="state" options={stateOptions} value={state} onChange={handleChange} placeholder="State" styles={styles}/>
+                  <Select name="state" options={stateOptions} value={state} onChange={handleChange} placeholder="State" styles={styles} />
                 </div>
                 <div className="select-wrapper">
-                  <Select name="city" options={cityOptions} value={city} onChange={handleChange} placeholder="City" styles={styles}/>
+                  <Select name="city" options={cityOptions} value={city} onChange={handleChange} placeholder="City" styles={styles} />
                 </div>
               </div>
             )}
@@ -181,9 +197,17 @@ class JobSearchPage extends React.Component{
               {this.state.prevSearch !== "" && <React.Fragment><b>{this.state.jobPosts.length}</b> jobs found for <b>"{this.state.prevSearch}"</b></React.Fragment>}
             </span>
             <span className="job-results-quantity-select">
-              Results per page: {quantityOptions.map(option => <span key={option}><a onClick={()=>{
-                this.setQuantityOptions(option);
-              }}>{option}</a></span>)}
+              Results per page: {quantityOptions.map(option =>
+                  (<span key={option}>
+                    {this.state.quantity !== option ?
+                      (<a onClick={()=>{
+                        this.setQuantityOptions(option);
+                      }}>{option}
+                      </a>) :
+                      option
+                    }
+                  </span>)
+              )}
             </span>
           </div>
 
