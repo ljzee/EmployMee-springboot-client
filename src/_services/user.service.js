@@ -126,6 +126,7 @@ function submitApplication(jobPostId, documents){
   const configOptions = {
       headers: authHeader()
   };
+
   return axios.post(`${config.apiUrl}/application`, {jobPostId: jobPostId, documentIds: documents}, configOptions)
               .then(result => result.data)
               .catch((error)=>Promise.reject(error.response.data));

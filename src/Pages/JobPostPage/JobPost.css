@@ -54,3 +54,13 @@
   padding-bottom: .300rem;
   margin-left: 10px;
 }
+
+.application-modal-button.applying{
+  width: 120px !important;
+}
+
+.applying-spinner {
+  height: 1rem;
+  width: 1rem;
+  margin-right: 10px;
+}
