@@ -208,7 +208,7 @@ class ApplicationModal extends React.Component {
               <Modal.Title>Applied!</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
+              <svg className="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle className="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path className="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
               <div>{`Your application for ${this.props.jobTitle} was successfully submitted. You will receive an email once the employer has reviewed your application.`}</div>
               <Button className="application-modal-button float-right" variant="secondary" onClick={this.props.toggleShowApplyModal}>
                 Close
